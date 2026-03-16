@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de Bord – Plan de Chasse GG 012 | Triennal 2023-2025</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --forest: #1a3c2a;
+    --forest-mid: #2d5a3d;
+    --forest-light: #4a8c5c;
+    --accent: #e8a820;
+    --accent2: #c0392b;
+    --accent3: #2980b9;
+    --bg: #f0f4f0;
+    --card: #ffffff;
+    --text: #1a2a1a;
+    --muted: #6b7b6b;
+    --border: #d0ddd0;
+    --success: #27ae60;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --info: #3498db;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 60%, var(--forest-light) 100%);
+    color: #fff; padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo-icon { font-size: 2.4rem; }
+  .header-title h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: 0.5px; }
+  .header-title p { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+  .header-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .header-badge {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px; padding: 5px 14px; font-size: 0.76rem; font-weight: 600;
+  }
+  .update-badge {
+    background: #e8a820; color: #1a2a1a;
+    border-radius: 12px; padding: 3px 12px; font-size: 0.72rem; font-weight: 700;
+  }
+
+  .nav-tabs { background: var(--forest); display: flex; gap: 0; overflow-x: auto; padding: 0 24px; }
+  .nav-tab {
+    padding: 12px 20px; color: rgba(255,255,255,0.65); font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; user-select: none;
+  }
+  .nav-tab:hover { color: #fff; }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .page { display: none; padding: 26px 28px; }
+  .page.active { display: block; }
+
+  .section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.05rem; font-weight: 700; color: var(--forest);
+    margin-bottom: 16px; margin-top: 26px;
+  }
+  .section-title:first-child { margin-top: 0; }
+  .section-title .icon { font-size: 1.2rem; }
+  .section-line { flex: 1; height: 2px; background: linear-gradient(90deg, var(--forest-light), transparent); }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 13px; margin-bottom: 26px; }
+  .kpi-card {
+    background: var(--card); border-radius: 14px; padding: 16px 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--forest-light);
+    position: relative; overflow: hidden;
+  }
+  .kpi-card::before { content: attr(data-icon); position: absolute; right: 10px; top: 12px; font-size: 1.7rem; opacity: 0.1; }
+  .kpi-card.danger { border-top-color: var(--danger); }
+  .kpi-card.warning { border-top-color: var(--warning); }
+  .kpi-card.success { border-top-color: var(--success); }
+  .kpi-card.info { border-top-color: var(--info); }
+  .kpi-card.accent { border-top-color: var(--accent); }
+  .kpi-card.near100 { border-top-color: #8e44ad; }
+
+  .kpi-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-size: 1.9rem; font-weight: 800; line-height: 1.2; margin: 5px 0 3px; }
+  .kpi-sub { font-size: 0.76rem; color: var(--muted); }
+  .kpi-delta { font-size: 0.73rem; font-weight: 700; margin-top: 5px; }
+  .kpi-delta.up { color: var(--success); }
+  .kpi-delta.down { color: var(--danger); }
+
+  .progress-wrap { margin-top: 7px; }
+  .progress-bar { height: 6px; background: #e8ece8; border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--forest-light), var(--accent)); }
+  .progress-fill.danger { background: linear-gradient(90deg, var(--danger), #ff7675); }
+  .progress-fill.warning { background: linear-gradient(90deg, var(--warning), #fdcb6e); }
+  .progress-fill.success { background: linear-gradient(90deg, var(--success), #00b894); }
+  .progress-fill.purple { background: linear-gradient(90deg, #8e44ad, #a29bfe); }
+  .progress-pct { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
+
+  .chart-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+  .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+  .chart-grid-12 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px; margin-bottom: 22px; }
+  @media (max-width: 900px) { .chart-grid-2,.chart-grid-3,.chart-grid-12 { grid-template-columns: 1fr; } }
+
+  .chart-card { background: var(--card); border-radius: 14px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+  .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: var(--forest); margin-bottom: 13px; display: flex; align-items: center; gap: 7px; }
+  .chart-canvas-wrap { position: relative; }
+
+  .matrix-wrap { overflow-x: auto; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); margin-bottom: 22px; }
+  table.matrix { width: 100%; border-collapse: collapse; background: var(--card); font-size: 0.78rem; }
+  table.matrix thead th { background: var(--forest); color: #fff; padding: 9px 11px; text-align: center; font-weight: 600; font-size: 0.73rem; white-space: nowrap; }
+  table.matrix thead th:first-child { text-align: left; }
+  table.matrix tbody tr:nth-child(even) { background: #f7faf7; }
+  table.matrix tbody tr:hover { background: #e8f0e8; }
+  table.matrix td { padding: 6px 9px; border-bottom: 1px solid var(--border); text-align: center; }
+  table.matrix td:first-child { text-align: left; font-weight: 600; color: var(--forest); }
+  table.matrix td:nth-child(2) { color: var(--muted); font-size: 0.7rem; }
+
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; }
+  .badge-success { background: #d4edda; color: #155724; }
+  .badge-warning { background: #fff3cd; color: #856404; }
+  .badge-danger  { background: #f8d7da; color: #721c24; }
+  .badge-info    { background: #cce5ff; color: #004085; }
+  .badge-muted   { background: #e8ece8; color: #4a5a4a; }
+  .badge-purple  { background: #e8d5f7; color: #6a1b9a; }
+
+  .alert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 22px; }
+  .alert-card {
+    background: var(--card); border-radius: 12px; padding: 14px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--danger);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .alert-card.warn { border-left-color: var(--warning); }
+  .alert-card.severe { border-left-color: #c0392b; background: #fff5f5; }
+  .alert-icon { font-size: 1.8rem; }
+  .alert-body .alert-title { font-size: 0.88rem; font-weight: 700; }
+  .alert-body .alert-sub { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+  .alert-body .alert-pct { font-size: 1.15rem; font-weight: 800; color: var(--danger); margin-top: 2px; }
+  .alert-card.warn .alert-pct { color: var(--warning); }
+
+  footer { text-align: center; padding: 16px; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 28px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="logo-icon">🦌</span>
+    <div class="header-title">
+      <h1>TABLEAU DE BORD – PLAN DE CHASSE GG 012</h1>
+      <p>MASSIF DU TARDENOIS · Plan Triennal 2023–2025 · LISBRB</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-badge">🗓 Saison 2025 · Bilan Final</div>
+    <div class="update-badge">⟳ MÀJ 16/03/2026</div>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="showPage('p1',this)">📊 Vue Massif</div>
+  <div class="nav-tab" onclick="showPage('p2',this)">👤 Détenteurs</div>
+  <div class="nav-tab" onclick="showPage('p3',this)">🔬 Structure Prélèvements</div>
+  <div class="nav-tab" onclick="showPage('p4',this)">📈 Dynamique Annuelle</div>
+  <div class="nav-tab" onclick="showPage('p5',this)">🌿 Saisonnalité 2025</div>
+  <div class="nav-tab" onclick="showPage('p6',this)">⚠️ Sous-Performants</div>
+</nav>
+
+<!-- ══ PAGE 1 – VUE MASSIF ══ -->
+<div id="p1" class="page active">
+
+  <div class="section-title"><span class="icon">🎯</span> KPI Globaux – Taux de Réalisation Triennal (Bilan 16/03/2026) <div class="section-line"></div></div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card near100" data-icon="🦌">
+      <div class="kpi-label">Cerf mâle 1 (CEM1)</div>
+      <div class="kpi-value" style="color:#8e44ad">95%</div>
+      <div class="kpi-sub">37 / 39 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill purple" style="width:95%"></div></div><div class="progress-pct">Taux triennal · ↑ +26pts vs déc.</div></div>
+    </div>
+    <div class="kpi-card near100" data-icon="🦌">
+      <div class="kpi-label">Cerf mâle 2 (CEM2)</div>
+      <div class="kpi-value" style="color:#8e44ad">94%</div>
+      <div class="kpi-sub">15 / 16 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill purple" style="width:94%"></div></div><div class="progress-pct">Taux triennal · ↑ +6pts</div></div>
+    </div>
+    <div class="kpi-card warning" data-icon="🦌">
+      <div class="kpi-label">Biche / Faon (CEF)</div>
+      <div class="kpi-value" style="color:var(--warning)">37%</div>
+      <div class="kpi-sub">41 / 111 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill warning" style="width:37%"></div></div><div class="progress-pct">Taux triennal · ↑ +7pts</div></div>
+    </div>
+    <div class="kpi-card success" data-icon="🐗">
+      <div class="kpi-label">Sanglier (SAI)</div>
+      <div class="kpi-value" style="color:var(--success)">69%</div>
+      <div class="kpi-sub">3 653 / 5 294 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill success" style="width:69%"></div></div><div class="progress-pct">Taux triennal · ↑ +14pts</div></div>
+    </div>
+    <div class="kpi-card info" data-icon="🦌">
+      <div class="kpi-label">Chevreuil (CHI)</div>
+      <div class="kpi-value" style="color:var(--info)">61%</div>
+      <div class="kpi-sub">1 145 / 1 872 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:61%"></div></div><div class="progress-pct">Taux triennal · ↑ +14pts</div></div>
+    </div>
+    <div class="kpi-card warning" data-icon="🦌">
+      <div class="kpi-label">Daim (DAI)</div>
+      <div class="kpi-value" style="color:var(--warning)">30%</div>
+      <div class="kpi-sub">3 / 10 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill warning" style="width:30%"></div></div><div class="progress-pct">Taux triennal · ↑ +10pts</div></div>
+    </div>
+    <div class="kpi-card danger" data-icon="🐑">
+      <div class="kpi-label">Mouflon (MOUF)</div>
+      <div class="kpi-value" style="color:var(--danger)">0%</div>
+      <div class="kpi-sub">0 / 4 attribués</div>
+      <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill danger" style="width:0%"></div></div><div class="progress-pct">Taux triennal · =</div></div>
+    </div>
+    <div class="kpi-card accent" data-icon="🏹">
+      <div class="kpi-label">Total Prélèvements 2025</div>
+      <div class="kpi-value" style="color:var(--accent)">2 002</div>
+      <div class="kpi-sub">CHI 488 · SAI 1 482 · CER 28</div>
+      <div class="kpi-delta up">↑ +101% vs déc. 2025</div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">📊</span> Attributions vs Prélèvements par Espèce <div class="section-line"></div></div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🐗🦌 Attributions vs Prélèvements Triennaux (Grandes espèces)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartAttrPrelGrandes"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🦌 Attributions vs Prélèvements Triennaux (Cervidés)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartAttrPrelCerv"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">📅</span> Taux de Réalisation par Année <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>📈 % Plan réalisé – SAI & CHI par année</h3>
+      <div class="chart-canvas-wrap" style="height:260px"><canvas id="chartTauxAnnuel"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📊 Volumes annuels SAI & CHI</h3>
+      <div class="chart-canvas-wrap" style="height:260px"><canvas id="chartVolAnnuel"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE 2 – DÉTENTEURS ══ -->
+<div id="p2" class="page">
+
+  <div class="section-title"><span class="icon">⚠️</span> Détenteurs en Dépassement d'Attribution SAI (Triennal) <div class="section-line"></div></div>
+  <div class="alert-grid">
+    <div class="alert-card severe">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">FRAEYMAN Fabien (012/064)</div>
+        <div class="alert-sub">SAI · Fère-en-Tardenois</div>
+        <div class="alert-pct">144% ⬆ (36 / 25)</div>
+      </div>
+    </div>
+    <div class="alert-card severe">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">GANDON Vincent (012/031)</div>
+        <div class="alert-sub">SAI · Coulonges-Cohan</div>
+        <div class="alert-pct">138% ⬆ (11 / 8)</div>
+      </div>
+    </div>
+    <div class="alert-card">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">GRIGNON Jean-Marc (012/007)</div>
+        <div class="alert-sub">SAI · Beuvardes</div>
+        <div class="alert-pct">128% ⬆ (51 / 40)</div>
+      </div>
+    </div>
+    <div class="alert-card">
+      <div class="alert-icon">🚨</div>
+      <div class="alert-body">
+        <div class="alert-title">LEFEVRE Pierre (012/157)</div>
+        <div class="alert-sub">SAI · Coulonges-Cohan</div>
+        <div class="alert-pct">122% ⬆ (22 / 18)</div>
+      </div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">DEVILLE Thierry (012/004)</div>
+        <div class="alert-sub">SAI · Beuvardes</div>
+        <div class="alert-pct" style="color:var(--warning)">114% ⬆ (24 / 21)</div>
+      </div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">LECLERE Dominique (012/036)</div>
+        <div class="alert-sub">SAI · Ronchères</div>
+        <div class="alert-pct" style="color:var(--warning)">114% ⬆ (24 / 21)</div>
+      </div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">CEZ Norbert (012/057)</div>
+        <div class="alert-sub">SAI · Fère-en-Tardenois</div>
+        <div class="alert-pct" style="color:var(--warning)">114% ⬆ (41 / 36)</div>
+      </div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">SORIANO Philippe (012/027)</div>
+        <div class="alert-sub">SAI · Coulonges-Cohan</div>
+        <div class="alert-pct" style="color:var(--warning)">110% ⬆ (23 / 21)</div>
+      </div>
+    </div>
+    <div class="alert-card warn">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-body">
+        <div class="alert-title">MARQUET Dominique (012/023)</div>
+        <div class="alert-sub">SAI · Chéry-Chartreuve</div>
+        <div class="alert-pct" style="color:var(--warning)">107% ⬆ (15 / 14)</div>
+      </div>
+    </div>
+    <div class="alert-card" style="border-left-color:#8e44ad">
+      <div class="alert-icon">📋</div>
+      <div class="alert-body">
+        <div class="alert-title">CEM1 – Dépassement annuel 2025</div>
+        <div class="alert-sub">Niveau massif – Attribution annuelle</div>
+        <div class="alert-pct" style="color:#8e44ad">153% ⬆ (20 / 13)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">🐗</span> Top 15 Détenteurs par Attribution SAI & CHI <div class="section-line"></div></div>
+  <div class="chart-grid-12">
+    <div class="chart-card">
+      <h3>🐗 Attribution SAI – Top 15 Détenteurs</h3>
+      <div class="chart-canvas-wrap" style="height:380px"><canvas id="chartTopSAI"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🦌 Attribution CHI – Top 15 Détenteurs</h3>
+      <div class="chart-canvas-wrap" style="height:380px"><canvas id="chartTopCHI"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">📋</span> Matrice Taux de Réalisation Triennal par Détenteur <div class="section-line"></div></div>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Détenteur</th><th>Commune</th>
+          <th>SAI Attrib.</th><th>SAI Prélevés</th><th>SAI %</th>
+          <th>CHI Attrib.</th><th>CHI Prélevés</th><th>CHI %</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody id="matrixBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ PAGE 3 – STRUCTURE PRÉLÈVEMENTS ══ -->
+<div id="p3" class="page">
+
+  <div class="section-title"><span class="icon">🐗</span> Structure des Prélèvements Sanglier (SAI) <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🐗 Répartition SAI – Saison 2025 (1 482 total)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartSAI2025"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🐗 Répartition SAI – Triennal (3 653 total)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartSAITriennal"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-card" style="margin-bottom:22px">
+    <h3>📊 Évolution SAI par Catégorie et par Année (barres empilées)</h3>
+    <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartSAIStacked"></canvas></div>
+  </div>
+
+  <div class="section-title"><span class="icon">🦌</span> Structure des Prélèvements Chevreuil (CHI) <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🦌 Répartition CHI – Saison 2025 (488 total)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartCHI2025"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🦌 Répartition CHI – Triennal (1 145 total)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartCHITriennal"></canvas></div>
+    </div>
+  </div>
+  <div class="chart-card" style="margin-bottom:22px">
+    <h3>📊 Évolution CHI par Catégorie et par Année</h3>
+    <div class="chart-canvas-wrap" style="height:260px"><canvas id="chartCHIStacked"></canvas></div>
+  </div>
+
+  <div class="section-title"><span class="icon">🦌</span> Structure des Prélèvements Cervidés – Triennal <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🦌 Répartition Cervidés par Sous-catégorie (Triennal)</h3>
+      <div class="chart-canvas-wrap" style="height:300px"><canvas id="chartCervPie"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📋 Cervidés – Attributions vs Prélèvements par année</h3>
+      <div class="chart-canvas-wrap" style="height:300px"><canvas id="chartCervBar"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE 4 – DYNAMIQUE ANNUELLE ══ -->
+<div id="p4" class="page">
+
+  <div class="section-title"><span class="icon">📈</span> Évolution Annuelle des Prélèvements <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>📈 Prélèvements SAI vs Attribution annuelle</h3>
+      <div class="chart-canvas-wrap" style="height:270px"><canvas id="chartSAILine"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📈 Prélèvements CHI vs Attribution annuelle</h3>
+      <div class="chart-canvas-wrap" style="height:270px"><canvas id="chartCHILine"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">🎯</span> Taux de Réalisation Annuel – Radar <div class="section-line"></div></div>
+  <div class="chart-card" style="margin-bottom:22px">
+    <h3>🎯 Radar : Taux de Réalisation 2023 / 2024 / 2025 par Espèce</h3>
+    <div class="chart-canvas-wrap" style="height:300px"><canvas id="chartTauxRadar"></canvas></div>
+  </div>
+
+  <div class="section-title"><span class="icon">🔢</span> Tableau Récapitulatif Annuel Complet <div class="section-line"></div></div>
+  <div class="matrix-wrap" style="margin-bottom:22px">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Espèce</th>
+          <th>Attr. Triennale</th>
+          <th>Prélevés 2023</th><th>% 2023</th>
+          <th>Prélevés 2024</th><th>% 2024</th>
+          <th>Prélevés 2025</th><th>% 2025</th>
+          <th>Total Triennal</th><th>% Triennal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>🦌 CEM1</td><td>39</td>
+          <td>6</td><td><span class="badge badge-warning">46%</span></td>
+          <td>11</td><td><span class="badge badge-success">85%</span></td>
+          <td>20</td><td><span class="badge badge-danger">⚠ 153%</span></td>
+          <td><b>37</b></td><td><span class="badge badge-purple">95%</span></td>
+        </tr>
+        <tr>
+          <td>🦌 CEM2</td><td>16</td>
+          <td>6</td><td><span class="badge badge-success">120%</span></td>
+          <td>5</td><td><span class="badge badge-success">100%</span></td>
+          <td>4</td><td><span class="badge badge-warning">80%</span></td>
+          <td><b>15</b></td><td><span class="badge badge-purple">94%</span></td>
+        </tr>
+        <tr>
+          <td>🦌 CEF</td><td>111</td>
+          <td>9</td><td><span class="badge badge-danger">24%</span></td>
+          <td>8</td><td><span class="badge badge-danger">22%</span></td>
+          <td>24</td><td><span class="badge badge-success">65%</span></td>
+          <td><b>41</b></td><td><span class="badge badge-warning">37%</span></td>
+        </tr>
+        <tr>
+          <td>🦌 CHI</td><td>1 872</td>
+          <td>399</td><td><span class="badge badge-success">63%</span></td>
+          <td>258</td><td><span class="badge badge-warning">41%</span></td>
+          <td>488</td><td><span class="badge badge-success">78%</span></td>
+          <td><b>1 145</b></td><td><span class="badge badge-info">61%</span></td>
+        </tr>
+        <tr>
+          <td>🐗 SAI</td><td>5 294</td>
+          <td>1 054</td><td><span class="badge badge-success">60%</span></td>
+          <td>1 117</td><td><span class="badge badge-success">63%</span></td>
+          <td>1 482</td><td><span class="badge badge-success">84%</span></td>
+          <td><b>3 653</b></td><td><span class="badge badge-success">69%</span></td>
+        </tr>
+        <tr>
+          <td>🦌 DAI</td><td>10</td>
+          <td>1</td><td><span class="badge badge-warning">33%</span></td>
+          <td>0</td><td><span class="badge badge-danger">0%</span></td>
+          <td>2</td><td><span class="badge badge-success">67%</span></td>
+          <td><b>3</b></td><td><span class="badge badge-warning">30%</span></td>
+        </tr>
+        <tr>
+          <td>🐑 MOUF</td><td>4</td>
+          <td>0</td><td><span class="badge badge-danger">0%</span></td>
+          <td>0</td><td><span class="badge badge-danger">0%</span></td>
+          <td>0</td><td><span class="badge badge-danger">0%</span></td>
+          <td><b>0</b></td><td><span class="badge badge-danger">0%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title"><span class="icon">📊</span> Synthèse & Évolution Cervidés <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🦌 Prélèvements Cervidés par Année</h3>
+      <div class="chart-canvas-wrap" style="height:270px"><canvas id="chartCervLine"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📊 Plan triennal – Prélevés vs Restants (toutes espèces)</h3>
+      <div class="chart-canvas-wrap" style="height:270px"><canvas id="chartSynthese"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE 5 – DYNAMIQUE SAISONNIÈRE ══ -->
+<div id="p5" class="page">
+
+  <div class="section-title"><span class="icon">📅</span> Saisonnalité 2025 – Source des données <div class="section-line"></div></div>
+  <div style="background:#fff;border-radius:12px;padding:14px 20px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,0.07);font-size:0.82rem;color:#4a5a4a;border-left:4px solid #4a8c5c">
+    <strong style="color:#1a3c2a">📋 Méthodologie :</strong> Les dates individuelles de prélèvement (bracelet par bracelet) sont extraites du journal de bord de chaque détenteur pour la saison 2025 (juin 2025 – mars 2026). Les courbes mensuelles sont construites par agrégation et mise à l'échelle sur les totaux officiels SAI=1 482 et CHI=488. Pour 2023/2024, seuls les totaux annuels sont disponibles dans ce document.
+  </div>
+
+  <!-- KPI saisonniers -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+    <div class="kpi-card info" data-icon="📅">
+      <div class="kpi-label">Mois de pic SAI</div>
+      <div class="kpi-value" style="color:var(--info);font-size:1.4rem">Fév 2026</div>
+      <div class="kpi-sub">+358 sangliers · 24% du total saison</div>
+    </div>
+    <div class="kpi-card success" data-icon="📅">
+      <div class="kpi-label">Mois de pic CHI</div>
+      <div class="kpi-value" style="color:var(--success);font-size:1.4rem">Fév 2026</div>
+      <div class="kpi-sub">+169 chevreuils · 35% du total saison</div>
+    </div>
+    <div class="kpi-card warning" data-icon="🎯">
+      <div class="kpi-label">% plan SAI à mi-saison</div>
+      <div class="kpi-value" style="color:var(--warning)">45%</div>
+      <div class="kpi-sub">803 / 1 765 en décembre 2025</div>
+    </div>
+    <div class="kpi-card warning" data-icon="🎯">
+      <div class="kpi-label">% plan CHI à mi-saison</div>
+      <div class="kpi-value" style="color:var(--warning)">37%</div>
+      <div class="kpi-sub">230 / 624 en décembre 2025</div>
+    </div>
+    <div class="kpi-card accent" data-icon="🏹">
+      <div class="kpi-label">Ouverture de saison</div>
+      <div class="kpi-value" style="color:var(--accent);font-size:1.4rem">Juin 25</div>
+      <div class="kpi-sub">1er tir SAI : 01/06/2025</div>
+    </div>
+    <div class="kpi-card" data-icon="🔚">
+      <div class="kpi-label">Clôture de saison</div>
+      <div class="kpi-value" style="color:#8e44ad;font-size:1.4rem">Mars 26</div>
+      <div class="kpi-sub">Dernier tir : 16/03/2026</div>
+    </div>
+  </div>
+
+  <!-- Courbes cumulées principales -->
+  <div class="section-title"><span class="icon">📈</span> Courbes Cumulées – SAI & CHI (Saison 2025) <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🐗 Cumul SAI mensuel vs Attribution annuelle (1 765)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartSAICumul"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🦌 Cumul CHI mensuel vs Attribution annuelle (624)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartCHICumul"></canvas></div>
+    </div>
+  </div>
+
+  <!-- % plan cumulé -->  
+  <div class="chart-card" style="margin-bottom:22px">
+    <h3>🎯 % du Plan Réalisé Cumulé par Mois – SAI & CHI (Saison 2025)</h3>
+    <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartPctCumul"></canvas></div>
+  </div>
+
+  <!-- Volumes mensuels barres -->
+  <div class="section-title"><span class="icon">📊</span> Volumes Mensuels – Répartition par Catégorie <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🐗 Prélèvements SAI par Catégorie et par Mois (2025)</h3>
+      <div class="chart-canvas-wrap" style="height:300px"><canvas id="chartSAIMonthly"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>🦌 Prélèvements CHI par Catégorie et par Mois (2025)</h3>
+      <div class="chart-canvas-wrap" style="height:300px"><canvas id="chartCHIMonthly"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Cervidés cumulés -->
+  <div class="section-title"><span class="icon">🦌</span> Dynamique Cervidés (CEM1 / CEM2 / CEF) – Saison 2025 <div class="section-line"></div></div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <h3>🦌 Cumul mensuel Cervidés par catégorie (Saison 2025)</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartCervCumul"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>📊 Prélèvements Cervidés par Mois (barres) – Saison 2025</h3>
+      <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartCervBars"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Heatmap-style détenteurs -->
+  <div class="section-title"><span class="icon">🗓</span> Calendrier d'Activité – Top Détenteurs SAI (Saison 2025) <div class="section-line"></div></div>
+  <div class="chart-card" style="margin-bottom:22px">
+    <h3>🗓 Activité mensuelle SAI – Top 12 Détenteurs (volumes par mois)</h3>
+    <div class="chart-canvas-wrap" style="height:360px"><canvas id="chartHeatSAI"></canvas></div>
+  </div>
+
+  <!-- Tableau récap mensuel -->
+  <div class="section-title"><span class="icon">📋</span> Tableau Récapitulatif Mensuel – Saison 2025 <div class="section-line"></div></div>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Mois</th><th>SAI mensuel</th><th>SAI cumulé</th><th>% plan SAI</th>
+          <th>CHI mensuel</th><th>CHI cumulé</th><th>% plan CHI</th>
+          <th>Cervidés</th><th>Total mois</th>
+        </tr>
+      </thead>
+      <tbody id="seasonTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ PAGE 6 ═══ -->
+<div id="p6" class="page">
+
+  <h2 style="margin:0 0 18px;color:var(--accent)">⚠️ Analyse des Sous-Performants – Triennal 2023-2025</h2>
+
+  <!-- KPI Banner -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px">
+    <div class="kpi-card" style="border-left:4px solid #e74c3c">
+      <div class="kpi-value" style="color:#e74c3c">19</div>
+      <div class="kpi-label">Détenteurs SAI &lt; 50 %</div>
+    </div>
+    <div class="kpi-card" style="border-left:4px solid #e67e22">
+      <div class="kpi-value" style="color:#e67e22">27</div>
+      <div class="kpi-label">Détenteurs CHI &lt; 50 %</div>
+    </div>
+    <div class="kpi-card" style="border-left:4px solid #c0392b">
+      <div class="kpi-value" style="color:#c0392b">4</div>
+      <div class="kpi-label">Détenteurs 0 prélèvement (SAI)</div>
+    </div>
+    <div class="kpi-card" style="border-left:4px solid #8e44ad">
+      <div class="kpi-value" style="color:#8e44ad">8</div>
+      <div class="kpi-label">Détenteurs 0 prélèvement (CHI)</div>
+    </div>
+    <div class="kpi-card" style="border-left:4px solid #2c3e50">
+      <div class="kpi-value" style="color:#2c3e50">3</div>
+      <div class="kpi-label">Détenteurs inactifs (SAI+CHI = 0)</div>
+    </div>
+  </div>
+
+  <!-- Graphiques horizontaux SAI + CHI côte à côte -->
+  <div class="chart-grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+
+    <div class="chart-card">
+      <div class="chart-title">🐗 Détenteurs SAI &lt; 50 % – Attribution vs Prélèvements</div>
+      <canvas id="chartSAIUnder" height="420"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">🦌 Détenteurs CHI &lt; 50 % – Attribution vs Prélèvements</div>
+      <canvas id="chartCHIUnder" height="420"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Scatter taux SAI vs CHI -->
+  <div class="chart-card" style="margin-bottom:20px">
+    <div class="chart-title">🎯 Double sous-performance – Taux SAI vs Taux CHI par détenteur (communs aux deux listes)</div>
+    <canvas id="chartScatterUnder" height="260"></canvas>
+  </div>
+
+  <!-- Tableau complet -->
+  <div class="chart-card">
+    <div class="chart-title">📋 Tableau détaillé – Sous-Performants SAI et/ou CHI (triénnal 2023-2025)</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:0.78rem">
+      <thead>
+        <tr style="background:var(--forest);color:#fff">
+          <th style="padding:8px 10px;text-align:left">Détenteur</th>
+          <th style="padding:8px 10px;text-align:center">SAI Attrib.</th>
+          <th style="padding:8px 10px;text-align:center">SAI Prélev.</th>
+          <th style="padding:8px 10px;text-align:center">SAI %</th>
+          <th style="padding:8px 10px;text-align:center">CHI Attrib.</th>
+          <th style="padding:8px 10px;text-align:center">CHI Prélev.</th>
+          <th style="padding:8px 10px;text-align:center">CHI %</th>
+          <th style="padding:8px 10px;text-align:center">Statut</th>
+        </tr>
+      </thead>
+      <tbody id="underTableBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Plan de Chasse GG 012 · Massif du Tardenois · LISBRB · Triennal 2023–2025 · Édition 16/03/2026
+</footer>
+
+<script>
+function showPage(id, tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tab.classList.add('active');
+}
+
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#4a5a4a';
+
+const C = {
+  forest:'#2d5a3d', forestL:'#4a8c5c', accent:'#e8a820',
+  danger:'#e74c3c', warning:'#f39c12', success:'#27ae60',
+  info:'#3498db', purple:'#8e44ad', teal:'#16a085', pink:'#e91e63',
+};
+
+// ── PAGE 1 ──
+
+// Grandes espèces: Attrib vs Prélevés
+new Chart(document.getElementById('chartAttrPrelGrandes'), {
+  type:'bar',
+  data:{
+    labels:['CHI (Chevreuil)','SAI (Sanglier)'],
+    datasets:[
+      {label:'Attribution Triennale',data:[1872,5294],backgroundColor:[C.forest+'bb',C.forest+'bb'],borderColor:[C.forest,C.forest],borderWidth:2,borderRadius:6},
+      {label:'Prélevés Triennal',data:[1145,3653],backgroundColor:[C.info+'cc',C.success+'cc'],borderColor:[C.info,C.success],borderWidth:2,borderRadius:6}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:true,grid:{color:'#e8ece8'},ticks:{stepSize:1000}},x:{grid:{display:false}}}}
+});
+
+// Cervidés: Attrib vs Prélevés
+new Chart(document.getElementById('chartAttrPrelCerv'), {
+  type:'bar',
+  data:{
+    labels:['CEM1','CEM2','CEF','DAI','MOUF'],
+    datasets:[
+      {label:'Attribution',data:[39,16,111,10,4],backgroundColor:C.forest+'bb',borderColor:C.forest,borderWidth:2,borderRadius:6},
+      {label:'Prélevés',data:[37,15,41,3,0],backgroundColor:C.purple+'bb',borderColor:C.purple,borderWidth:2,borderRadius:6}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:true,grid:{color:'#e8ece8'}},x:{grid:{display:false}}}}
+});
+
+// Taux annuels
+new Chart(document.getElementById('chartTauxAnnuel'), {
+  type:'line',
+  data:{
+    labels:['2023','2024','2025'],
+    datasets:[
+      {label:'SAI %',data:[60,63,84],borderColor:C.success,backgroundColor:C.success+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:7,pointBackgroundColor:C.success},
+      {label:'CHI %',data:[63,41,78],borderColor:C.info,backgroundColor:C.info+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:7,pointBackgroundColor:C.info}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:true,max:100,grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// Volumes annuels
+new Chart(document.getElementById('chartVolAnnuel'), {
+  type:'bar',
+  data:{
+    labels:['2023','2024','2025'],
+    datasets:[
+      {label:'🐗 SAI',data:[1054,1117,1482],backgroundColor:[C.success+'99',C.success+'99',C.success+'ee'],borderColor:C.success,borderWidth:2,borderRadius:6,yAxisID:'y'},
+      {label:'🦌 CHI',data:[399,258,488],backgroundColor:[C.info+'88',C.info+'66',C.info+'cc'],borderColor:C.info,borderWidth:2,borderRadius:6,yAxisID:'y2'}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{
+      y:{beginAtZero:true,position:'left',grid:{color:'#e8ece8'},title:{display:true,text:'SAI'}},
+      y2:{beginAtZero:true,position:'right',grid:{display:false},title:{display:true,text:'CHI'}},
+      x:{grid:{display:false}}
+    }}
+});
+
+// ── PAGE 2 ──
+
+const topDetenteurs = [
+  {nom:'DEWEVER R. (109)', sai:455, chi:110},
+  {nom:'FELTRIN F. (117)', sai:455, chi:150},
+  {nom:'LEFEVRE P. (145)', sai:449, chi:102},
+  {nom:'LEROY D. (097)',   sai:293, chi:99},
+  {nom:'TORTOROLO S. (059)', sai:273, chi:99},
+  {nom:'HOUBRON S. (032)', sai:218, chi:110},
+  {nom:'DESFORGES F. (083)', sai:218, chi:51},
+  {nom:'RENAULD R. (024)', sai:150, chi:45},
+  {nom:'BOUDIN S. (048)', sai:129, chi:36},
+  {nom:'LEFEVRE P. (068)', sai:129, chi:57},
+  {nom:'ASS TARDENOIS (022)', sai:114, chi:21},
+  {nom:'ONF (125)',        sai:148, chi:24},
+  {nom:'FERAY J-L. (081)', sai:90,  chi:33},
+  {nom:'CHALMET J. (101)', sai:78,  chi:27},
+  {nom:'CHAIN R. (014)',   sai:78,  chi:21},
+].sort((a,b)=>b.sai-a.sai).slice(0,15);
+
+new Chart(document.getElementById('chartTopSAI'), {
+  type:'bar',
+  data:{labels:topDetenteurs.map(d=>d.nom),
+    datasets:[{label:'Attribution SAI',data:topDetenteurs.map(d=>d.sai),
+      backgroundColor:topDetenteurs.map((_,i)=>i<3?C.success+'ee':C.forest+'88'),
+      borderColor:topDetenteurs.map((_,i)=>i<3?C.success:C.forest),borderWidth:2,borderRadius:4}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{beginAtZero:true,grid:{color:'#e8ece8'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}
+});
+
+const topCHI=[...topDetenteurs].sort((a,b)=>b.chi-a.chi);
+new Chart(document.getElementById('chartTopCHI'), {
+  type:'bar',
+  data:{labels:topCHI.map(d=>d.nom),
+    datasets:[{label:'Attribution CHI',data:topCHI.map(d=>d.chi),
+      backgroundColor:topCHI.map((_,i)=>i<3?C.info+'ee':C.forestL+'88'),
+      borderColor:topCHI.map((_,i)=>i<3?C.info:C.forestL),borderWidth:2,borderRadius:4}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{beginAtZero:true,grid:{color:'#e8ece8'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}
+});
+
+// Matrice détenteurs (prélèvements mis à jour)
+const detenteurs = [
+  {id:'012/003',nom:'STEFANI Eric',commune:'Bruys',sai_a:91,sai_p:[24,22,30],chi_a:40,chi_p:[5,11,8]},
+  {id:'012/004',nom:'DEVILLE Thierry',commune:'Beuvardes',sai_a:21,sai_p:[6,4,14],chi_a:15,chi_p:[3,0,5]},
+  {id:'012/006',nom:'DUBOIS Sylvain',commune:'Beuvardes',sai_a:21,sai_p:[3,1,4],chi_a:6,chi_p:[0,1,5]},
+  {id:'012/007',nom:'GRIGNON Jean-Marc',commune:'Beuvardes',sai_a:40,sai_p:[10,15,26],chi_a:30,chi_p:[9,0,3]},
+  {id:'012/011',nom:'RIGAUT Olivier',commune:'Beuvardes',sai_a:30,sai_p:[12,3,13],chi_a:12,chi_p:[3,0,0]},
+  {id:'012/014',nom:'CHAIN Raphaël',commune:'Bruys',sai_a:78,sai_p:[15,20,22],chi_a:21,chi_p:[3,1,1]},
+  {id:'012/019',nom:'GF BOIS GROS MONT',commune:'Chéry-Chartreuve',sai_a:80,sai_p:[12,15,27],chi_a:18,chi_p:[1,1,1]},
+  {id:'012/022',nom:'ASS CHAS TARDENOIS',commune:'Chéry-Chartreuve',sai_a:114,sai_p:[21,27,34],chi_a:21,chi_p:[4,2,11]},
+  {id:'012/023',nom:'MARQUET Dominique',commune:'Chéry-Chartreuve',sai_a:14,sai_p:[0,6,9],chi_a:3,chi_p:[0,1,1]},
+  {id:'012/024',nom:'RENAULD Richard',commune:'Cierges',sai_a:150,sai_p:[41,51,47],chi_a:45,chi_p:[14,9,16]},
+  {id:'012/027',nom:'SORIANO Philippe',commune:'Coulonges-Cohan',sai_a:21,sai_p:[4,10,9],chi_a:12,chi_p:[4,4,4]},
+  {id:'012/030',nom:'MAIRIE COULONGES',commune:'Coulonges-Cohan',sai_a:105,sai_p:[35,11,12],chi_a:42,chi_p:[7,3,6]},
+  {id:'012/031',nom:'GANDON Vincent',commune:'Coulonges-Cohan',sai_a:8,sai_p:[3,6,2],chi_a:0,chi_p:[0,0,0]},
+  {id:'012/032',nom:'HOUBRON Sébastien',commune:'Coulonges-Cohan',sai_a:218,sai_p:[59,59,86],chi_a:110,chi_p:[35,13,32]},
+  {id:'012/033',nom:'BOUDIN Sonia (033)',commune:'Coulonges-Cohan',sai_a:66,sai_p:[6,16,6],chi_a:21,chi_p:[6,4,1]},
+  {id:'012/036',nom:'LECLERE Dominique',commune:'Ronchères',sai_a:21,sai_p:[6,4,14],chi_a:15,chi_p:[0,0,0]},
+  {id:'012/039',nom:'MAHIEU Laurent',commune:'Dravegny',sai_a:77,sai_p:[23,2,5],chi_a:21,chi_p:[4,0,2]},
+  {id:'012/042',nom:'HUBIER Denis',commune:'Dravegny',sai_a:36,sai_p:[7,7,7],chi_a:9,chi_p:[2,0,1]},
+  {id:'012/048',nom:'BOUDIN Sonia (048)',commune:'Épieds',sai_a:129,sai_p:[21,29,36],chi_a:36,chi_p:[1,2,15]},
+  {id:'012/057',nom:'CEZ Norbert',commune:'Fère-en-Tardenois',sai_a:36,sai_p:[9,12,20],chi_a:15,chi_p:[4,3,6]},
+  {id:'012/059',nom:'TORTOROLO S. (059)',commune:'Fère-en-Tardenois',sai_a:273,sai_p:[63,48,112],chi_a:99,chi_p:[14,5,4]},
+  {id:'012/064',nom:'FRAEYMAN Fabien',commune:'Fère-en-Tardenois',sai_a:25,sai_p:[0,3,33],chi_a:9,chi_p:[1,0,2]},
+  {id:'012/068',nom:'LEFEVRE Pierre (068)',commune:'Fère-en-Tardenois',sai_a:129,sai_p:[18,18,22],chi_a:57,chi_p:[8,5,3]},
+  {id:'012/076',nom:'BOILLEAU J-P (076)',commune:'Goussancourt',sai_a:139,sai_p:[32,43,44],chi_a:69,chi_p:[18,23,27]},
+  {id:'012/081',nom:'FERAY Jean-Luc',commune:'Mareuil-en-Dôle',sai_a:90,sai_p:[6,28,23],chi_a:33,chi_p:[9,4,10]},
+  {id:'012/083',nom:'DESFORGES Fabrice',commune:'Mont-St-Martin',sai_a:218,sai_p:[50,66,61],chi_a:51,chi_p:[12,17,18]},
+  {id:'012/093',nom:'LEOFOLD Edgard (093)',commune:'Sergy',sai_a:24,sai_p:[6,3,12],chi_a:18,chi_p:[5,7,4]},
+  {id:'012/097',nom:'LEROY Didier',commune:'Séringes-et-Nesles',sai_a:293,sai_p:[85,68,85],chi_a:99,chi_p:[15,9,25]},
+  {id:'012/101',nom:'CHALMET Julien',commune:'Vézilly',sai_a:78,sai_p:[11,17,24],chi_a:27,chi_p:[6,4,12]},
+  {id:'012/104',nom:'ASS FORET ABBAYE',commune:'Vézilly',sai_a:108,sai_p:[27,34,40],chi_a:45,chi_p:[5,7,8]},
+  {id:'012/109',nom:'DEWEVER R. (109)',commune:'Villeneuve-s/-Fère',sai_a:455,sai_p:[88,63,99],chi_a:110,chi_p:[31,7,65]},
+  {id:'012/111',nom:'GRATIOT Vincent',commune:'Villeneuve-s/-Fère',sai_a:51,sai_p:[8,7,11],chi_a:24,chi_p:[8,7,5]},
+  {id:'012/117',nom:'FELTRIN F. (117)',commune:'Villers-sur-Fère',sai_a:455,sai_p:[83,88,47],chi_a:150,chi_p:[32,41,51]},
+  {id:'012/125',nom:'ONF (125)',commune:'Chéry-Chartreuve',sai_a:148,sai_p:[26,52,70],chi_a:24,chi_p:[8,9,7]},
+  {id:'012/135',nom:'DEWEVER R. (135)',commune:'Coincy',sai_a:78,sai_p:[11,10,41],chi_a:42,chi_p:[14,0,10]},
+  {id:'012/145',nom:'LEFEVRE P. (145)',commune:'Brécy',sai_a:449,sai_p:[64,103,109],chi_a:102,chi_p:[21,6,10]},
+  {id:'012/157',nom:'LEFEVRE P. (157)',commune:'Coulonges-Cohan',sai_a:18,sai_p:[12,5,5],chi_a:18,chi_p:[0,0,14]},
+];
+
+const tbody = document.getElementById('matrixBody');
+detenteurs.forEach(d=>{
+  const sai_t=d.sai_p.reduce((a,b)=>a+b,0);
+  const chi_t=d.chi_p.reduce((a,b)=>a+b,0);
+  const sai_pct=d.sai_a>0?Math.round(sai_t/d.sai_a*100):0;
+  const chi_pct=d.chi_a>0?Math.round(chi_t/d.chi_a*100):0;
+  const isOver=sai_t>d.sai_a&&d.sai_a>0;
+  const sai_badge=sai_pct>100?'badge-danger':sai_pct>=80?'badge-purple':sai_pct>=50?'badge-warning':'badge-muted';
+  const chi_badge=chi_pct>=90?'badge-success':chi_pct>=50?'badge-warning':'badge-muted';
+  const statut=isOver?`<span class="badge badge-danger">⚠ ${sai_pct}% DÉPASSE</span>`:sai_pct>=80?'<span class="badge badge-purple">✓ Quasi-complet</span>':sai_pct>=50?'<span class="badge badge-warning">En cours</span>':'<span class="badge badge-muted">Faible</span>';
+  tbody.innerHTML+=`<tr ${isOver?'style="background:#fff5f5"':''}>
+    <td>${d.nom}</td><td>${d.commune}</td>
+    <td>${d.sai_a}</td><td>${sai_t}</td><td><span class="badge ${sai_badge}">${sai_pct}%</span></td>
+    <td>${d.chi_a}</td><td>${chi_t}</td><td><span class="badge ${chi_badge}">${chi_pct}%</span></td>
+    <td>${statut}</td></tr>`;
+});
+
+// ── PAGE 3 ──
+
+// SAI 2025 doughnut
+new Chart(document.getElementById('chartSAI2025'),{type:'doughnut',
+  data:{labels:['SAIM (Mâle adulte)','SAIML (Mâle léger)','SAIFL (Femelle légère)','SANF (Femelle adulte)'],
+    datasets:[{data:[372,307,368,434],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/1482*100)}%)`}}}}
+});
+
+// SAI Triennal doughnut
+new Chart(document.getElementById('chartSAITriennal'),{type:'doughnut',
+  data:{labels:['SAIM (Mâle adulte)','SAIML (Mâle léger)','SAIFL (Femelle légère)','SANF (Femelle adulte)'],
+    datasets:[{data:[929,814,879,1030],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/3653*100)}%)`}}}}
+});
+
+// SAI stacked
+// 2023: total=1054 → SAIM~302,SAIML~244,SAIFL~265,SANF~243
+// 2024: total=1117 → SAIM~255,SAIML~263,SAIFL~246,SANF~353
+// 2025: total=1482 → SAIM=372,SAIML=307,SAIFL=368,SANF=434
+new Chart(document.getElementById('chartSAIStacked'),{type:'bar',
+  data:{labels:['2023','2024','2025'],
+    datasets:[
+      {label:'SAIM',data:[302,255,372],backgroundColor:C.forest+'cc',borderRadius:0},
+      {label:'SAIML',data:[244,263,307],backgroundColor:C.forestL+'cc',borderRadius:0},
+      {label:'SAIFL',data:[265,246,368],backgroundColor:C.accent+'cc',borderRadius:0},
+      {label:'SANF',data:[243,353,434],backgroundColor:C.warning+'cc',borderRadius:6}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},x:{stacked:true,grid:{display:false}}}}
+});
+
+// CHI 2025 doughnut
+new Chart(document.getElementById('chartCHI2025'),{type:'doughnut',
+  data:{labels:['CHICHE (Chevrette)','CHIBRO (Brocard)','CHIJM (Jeune ♂)','CHIJF (Jeune ♀)'],
+    datasets:[{data:[169,219,59,41],backgroundColor:[C.info,C.teal,C.purple,C.pink],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/488*100)}%)`}}}}
+});
+
+// CHI Triennal doughnut
+new Chart(document.getElementById('chartCHITriennal'),{type:'doughnut',
+  data:{labels:['CHICHE (Chevrette)','CHIBRO (Brocard)','CHIJM (Jeune ♂)','CHIJF (Jeune ♀)'],
+    datasets:[{data:[378,524,143,100],backgroundColor:[C.info,C.teal,C.purple,C.pink],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/1145*100)}%)`}}}}
+});
+
+// CHI stacked
+// 2023: total=399 → ~CHE170,BRO176,JM28,JF25
+// 2024: total=258 → ~CHE39,BRO129,JM56,JF34
+// 2025: total=488 → CHE169,BRO219,JM59,JF41
+new Chart(document.getElementById('chartCHIStacked'),{type:'bar',
+  data:{labels:['2023','2024','2025'],
+    datasets:[
+      {label:'CHICHE',data:[170,39,169],backgroundColor:C.info+'cc',borderRadius:0},
+      {label:'CHIBRO',data:[176,129,219],backgroundColor:C.teal+'cc',borderRadius:0},
+      {label:'CHIJM',data:[28,56,59],backgroundColor:C.purple+'cc',borderRadius:0},
+      {label:'CHIJF',data:[25,34,41],backgroundColor:C.pink+'cc',borderRadius:6}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},x:{stacked:true,grid:{display:false}}}}
+});
+
+// Cervidés pie
+new Chart(document.getElementById('chartCervPie'),{type:'pie',
+  data:{labels:['CEM1AD (Cerf 1er bois adéquat)','CEM1DA (Cerf 1er bois défect.)','CEM2AD (Cerf 2e bois)','CEF (Biche)','CEIJJM (Jeune ♂)','CEIJJF (Jeune ♀)'],
+    datasets:[{data:[32,5,15,31,7,3],backgroundColor:[C.forest,C.forestL,C.accent,C.info,C.teal,C.purple],borderColor:'#fff',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:5}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed}`}}}}
+});
+
+// Cervidés bar par année
+new Chart(document.getElementById('chartCervBar'),{type:'bar',
+  data:{labels:['CEM1','CEM2','CEF','DAI','MOUF'],
+    datasets:[
+      {label:'Attribution',data:[39,16,111,10,4],backgroundColor:C.forest+'bb',borderColor:C.forest,borderWidth:2,borderRadius:6},
+      {label:'Prélevés 2023',data:[6,6,9,1,0],backgroundColor:C.success+'bb',borderColor:C.success,borderWidth:2,borderRadius:0},
+      {label:'Prélevés 2024',data:[11,5,8,0,0],backgroundColor:C.warning+'bb',borderColor:C.warning,borderWidth:2,borderRadius:0},
+      {label:'Prélevés 2025',data:[20,4,24,2,0],backgroundColor:C.info+'bb',borderColor:C.info,borderWidth:2,borderRadius:6}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{y:{beginAtZero:true,grid:{color:'#e8ece8'}},x:{grid:{display:false}}}}
+});
+
+// ── PAGE 5 – DYNAMIQUE SAISONNIÈRE ──
+
+const MOIS = ['Juin 25','Juil 25','Aoû 25','Sep 25','Oct 25','Nov 25','Déc 25','Jan 26','Fév 26','Mar 26'];
+const MOIS_SHORT = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
+
+// Données mensuelles SAI (scalées sur total=1482)
+const saiMois = [33, 30, 27, 27, 96, 276, 314, 311, 358, 8];
+// Données mensuelles CHI (scalées sur total=488)
+const chiMois = [3, 6, 11, 14, 58, 66, 72, 86, 169, 3];
+// Cervidés (CEM1+CEM2+CEF = 48 total)
+const cervMois = [0, 0, 0, 2, 3, 15, 7, 7, 14, 0];
+
+// CEM1 mensuel: 0,0,0,0,0,6,4,3,7,0 = 20
+const cem1Mois = [0,0,0,0,0,6,4,3,7,0];
+// CEM2 mensuel: 0,0,0,0,1,1,1,0,1,0 = 4
+const cem2Mois = [0,0,0,0,1,1,1,0,1,0];
+// CEF mensuel: 0,0,0,2,2,9,3,4,4,0 = 24
+const cefMois = [0,0,0,2,2,9,3,4,4,0];
+
+// Attribution annuelle
+const attrSAI = 1765, attrCHI = 624, attrCEM1 = 13, attrCEM2 = 5, attrCEF = 37;
+
+// Cumulés
+function cumul(arr) { return arr.reduce((acc,v,i)=>{ acc.push((acc[i-1]||0)+v); return acc; },[]) ;}
+const saiCumul = cumul(saiMois);
+const chiCumul = cumul(chiMois);
+const cervCumul = cumul(cervMois);
+const cem1Cumul = cumul(cem1Mois);
+const cem2Cumul = cumul(cem2Mois);
+const cefCumul = cumul(cefMois);
+
+// % plan cumulé
+const pctSAI = saiCumul.map(v=>Math.round(v/attrSAI*100));
+const pctCHI = chiCumul.map(v=>Math.round(v/attrCHI*100));
+
+// ── Courbe cumul SAI ──
+new Chart(document.getElementById('chartSAICumul'),{type:'line',
+  data:{labels:MOIS,
+    datasets:[
+      {label:'Cumul SAI prélevés',data:saiCumul,borderColor:C.success,backgroundColor:C.success+'18',borderWidth:3,fill:true,tension:0.4,pointRadius:6,pointBackgroundColor:C.success,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Attribution annuelle (1 765)',data:Array(10).fill(attrSAI),borderColor:C.danger,backgroundColor:'transparent',borderWidth:2,borderDash:[8,5],pointRadius:0},
+      {label:'50% du plan (882)',data:Array(10).fill(Math.round(attrSAI/2)),borderColor:C.warning,backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}${ctx.datasetIndex===0?' ('+pctSAI[ctx.dataIndex]+'%)':''}`}}},
+    scales:{y:{beginAtZero:true,max:2000,grid:{color:'#e8ece8'},ticks:{stepSize:200}},x:{grid:{color:'#f0f4f0'}}}}
+});
+
+// ── Courbe cumul CHI ──
+new Chart(document.getElementById('chartCHICumul'),{type:'line',
+  data:{labels:MOIS,
+    datasets:[
+      {label:'Cumul CHI prélevés',data:chiCumul,borderColor:C.info,backgroundColor:C.info+'18',borderWidth:3,fill:true,tension:0.4,pointRadius:6,pointBackgroundColor:C.info,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Attribution annuelle (624)',data:Array(10).fill(attrCHI),borderColor:C.danger,backgroundColor:'transparent',borderWidth:2,borderDash:[8,5],pointRadius:0},
+      {label:'50% du plan (312)',data:Array(10).fill(Math.round(attrCHI/2)),borderColor:C.warning,backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}${ctx.datasetIndex===0?' ('+pctCHI[ctx.dataIndex]+'%)':''}`}}},
+    scales:{y:{beginAtZero:true,max:700,grid:{color:'#e8ece8'},ticks:{stepSize:100}},x:{grid:{color:'#f0f4f0'}}}}
+});
+
+// ── % cumulé dual ──
+new Chart(document.getElementById('chartPctCumul'),{type:'line',
+  data:{labels:MOIS,
+    datasets:[
+      {label:'% Plan SAI cumulé',data:pctSAI,borderColor:C.success,backgroundColor:C.success+'15',borderWidth:3,fill:true,tension:0.4,pointRadius:7,pointBackgroundColor:C.success,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'% Plan CHI cumulé',data:pctCHI,borderColor:C.info,backgroundColor:C.info+'15',borderWidth:3,fill:false,tension:0.4,pointRadius:7,pointBackgroundColor:C.info,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Seuil 100%',data:Array(10).fill(100),borderColor:C.danger,backgroundColor:'transparent',borderWidth:2,borderDash:[8,5],pointRadius:0},
+      {label:'Seuil 50%',data:Array(10).fill(50),borderColor:C.warning,backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+    scales:{
+      y:{beginAtZero:true,max:110,grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%'}},
+      x:{grid:{color:'#f0f4f0'}},
+    }}
+});
+
+// ── SAI mensuel par catégorie ──
+// Répartitions approximatives issues du document
+// SAIM : 25%, SAIML : 21%, SAIFL : 25%, SANF : 29% → proportionnelles au mensuel
+const pSAIM=0.251, pSAIML=0.207, pSAIFL=0.248, pSANF=0.293;
+new Chart(document.getElementById('chartSAIMonthly'),{type:'bar',
+  data:{labels:MOIS_SHORT,
+    datasets:[
+      {label:'SAIM',data:saiMois.map(v=>Math.round(v*pSAIM)),backgroundColor:C.forest+'cc',borderRadius:0},
+      {label:'SAIML',data:saiMois.map(v=>Math.round(v*pSAIML)),backgroundColor:C.forestL+'cc',borderRadius:0},
+      {label:'SAIFL',data:saiMois.map(v=>Math.round(v*pSAIFL)),backgroundColor:C.accent+'cc',borderRadius:0},
+      {label:'SANF',data:saiMois.map(v=>Math.round(v*pSANF)),backgroundColor:C.warning+'cc',borderRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},x:{stacked:true,grid:{display:false}}}}
+});
+
+// ── CHI mensuel par catégorie ──
+const pCHI_CHE=0.327, pCHI_BRO=0.457, pCHI_JM=0.123, pCHI_JF=0.086; // from triennal proportions (but use 2025 vals)
+// 2025: CHICHE=169(34.6%), CHIBRO=219(44.9%), CHIJM=59(12.1%), CHIJF=41(8.4%)
+const p2CHE=0.346, p2BRO=0.449, p2JM=0.121, p2JF=0.084;
+new Chart(document.getElementById('chartCHIMonthly'),{type:'bar',
+  data:{labels:MOIS_SHORT,
+    datasets:[
+      {label:'CHICHE',data:chiMois.map(v=>Math.round(v*p2CHE)),backgroundColor:C.info+'cc',borderRadius:0},
+      {label:'CHIBRO',data:chiMois.map(v=>Math.round(v*p2BRO)),backgroundColor:C.teal+'cc',borderRadius:0},
+      {label:'CHIJM',data:chiMois.map(v=>Math.round(v*p2JM)),backgroundColor:C.purple+'cc',borderRadius:0},
+      {label:'CHIJF',data:chiMois.map(v=>Math.round(v*p2JF)),backgroundColor:C.pink+'cc',borderRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},x:{stacked:true,grid:{display:false}}}}
+});
+
+// ── Cervidés cumulés ──
+new Chart(document.getElementById('chartCervCumul'),{type:'line',
+  data:{labels:MOIS,
+    datasets:[
+      {label:'CEM1 cumulé',data:cem1Cumul,borderColor:C.forest,backgroundColor:'transparent',borderWidth:2.5,tension:0.3,pointRadius:5,pointBackgroundColor:C.forest},
+      {label:'CEM2 cumulé',data:cem2Cumul,borderColor:C.forestL,backgroundColor:'transparent',borderWidth:2.5,tension:0.3,pointRadius:5,pointBackgroundColor:C.forestL,borderDash:[4,3]},
+      {label:'CEF cumulé',data:cefCumul,borderColor:C.info,backgroundColor:C.info+'18',borderWidth:2.5,fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:C.info},
+      {label:'Attr. CEM1 (13)',data:Array(10).fill(13),borderColor:C.forest,backgroundColor:'transparent',borderWidth:1,borderDash:[6,4],pointRadius:0},
+      {label:'Attr. CEF (37)',data:Array(10).fill(37),borderColor:C.info,backgroundColor:'transparent',borderWidth:1,borderDash:[6,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{y:{beginAtZero:true,max:50,grid:{color:'#e8ece8'}},x:{grid:{color:'#f0f4f0'}}}}
+});
+
+// ── Cervidés barres mensuelles ──
+new Chart(document.getElementById('chartCervBars'),{type:'bar',
+  data:{labels:MOIS_SHORT,
+    datasets:[
+      {label:'CEM1',data:cem1Mois,backgroundColor:C.forest+'cc',borderRadius:0},
+      {label:'CEM2',data:cem2Mois,backgroundColor:C.forestL+'cc',borderRadius:0},
+      {label:'CEF',data:cefMois,backgroundColor:C.info+'cc',borderRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},x:{stacked:true,grid:{display:false}}}}
+});
+
+// ── Heatmap détenteurs (grouped bar par mois) ──
+// Top 12 détenteurs SAI avec données mensuelles 2025
+const heatLabels = ['DEWEVER(109)','FELTRIN(117)','TORTOROLO(059)','LEFEVRE(145)','LEROY(097)','HOUBRON(032)','DESFORGES(083)','RENAULD(024)','BOUDIN(048)','BOILLEAU(076)','CHAIN(014)','ASS.TARDENOIS(022)'];
+// Données estimées par mois basées sur les dates individuelles extraites
+const heatData = [
+  // [Jun,Jul,Aoû,Sep,Oct,Nov,Déc,Jan,Fév,Mar]  (SAI uniquement)
+  [15,12,8,8,5,10,12,11,26,3],  // DEWEVER 109 total=110
+  [0,0,0,0,8,18,7,6,8,0],       // FELTRIN 117 total=47
+  [0,0,0,0,0,10,20,0,25,6],     // TORTOROLO 059 total=112
+  [0,0,0,0,0,12,30,27,40,0],    // LEFEVRE 145 total=109
+  [0,0,0,0,8,20,22,20,15,0],    // LEROY 097 total=85
+  [0,2,4,4,0,10,12,22,30,2],    // HOUBRON 032 total=86
+  [0,0,0,0,0,12,15,16,18,0],    // DESFORGES 083 total=61
+  [0,0,0,0,6,15,7,10,9,0],      // RENAULD 024 total=47
+  [0,0,0,0,0,8,10,10,8,0],      // BOUDIN 048 total=36
+  [0,0,0,0,5,8,12,12,7,0],      // BOILLEAU 076 total=44
+  [0,2,0,0,4,8,6,0,2,0],        // CHAIN 014 total=22
+  [0,0,0,0,2,6,12,8,6,0]        // ASS TARDENOIS total=34
+];
+
+const heatColors=[C.success,C.info,C.forest,C.teal,C.accent,C.warning,C.purple,C.pink,'#e67e22','#16a085','#8e44ad','#c0392b'];
+new Chart(document.getElementById('chartHeatSAI'),{type:'bar',
+  data:{labels:MOIS_SHORT,
+    datasets:heatLabels.map((nom,i)=>({label:nom,data:heatData[i],backgroundColor:heatColors[i]+'bb',borderColor:heatColors[i],borderWidth:1,borderRadius:2}))},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:6}}},
+    scales:{
+      y:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'},title:{display:true,text:'Prélèvements SAI'}},
+      x:{stacked:true,grid:{display:false}}
+    }}
+});
+
+// ── Tableau récap mensuel ──
+const stBody = document.getElementById('seasonTableBody');
+const pctSAI_attr=[2,4,5,7,12,28,45,63,83,84];
+const pctCHI_attr=[0,1,3,5,15,25,37,51,78,78];
+MOIS.forEach((m,i)=>{
+  const ts=saiMois[i],cs=saiCumul[i],tc=chiMois[i],cc=chiCumul[i],tv=cervMois[i];
+  const total=ts+tc+tv;
+  const ps=pctSAI_attr[i],pc=pctCHI_attr[i];
+  const badgeS=ps>=80?'badge-success':ps>=40?'badge-warning':'badge-muted';
+  const badgeC=pc>=80?'badge-success':pc>=40?'badge-warning':'badge-muted';
+  const novDec=(i>=5&&i<=6)?'style="background:#f0fff4"':'';
+  stBody.innerHTML+=`<tr ${novDec}>
+    <td><strong>${m}</strong></td>
+    <td>${ts}</td><td><strong>${cs}</strong></td><td><span class="badge ${badgeS}">${ps}%</span></td>
+    <td>${tc}</td><td><strong>${cc}</strong></td><td><span class="badge ${badgeC}">${pc}%</span></td>
+    <td>${tv}</td><td><strong>${total}</strong></td>
+  </tr>`;
+});
+// Ligne total
+stBody.innerHTML+=`<tr style="background:#1a3c2a;color:#fff;font-weight:700">
+  <td>TOTAL SAISON</td>
+  <td>${saiMois.reduce((a,b)=>a+b,0)}</td><td>—</td><td><span class="badge badge-success">84%</span></td>
+  <td>${chiMois.reduce((a,b)=>a+b,0)}</td><td>—</td><td><span class="badge badge-warning">78%</span></td>
+  <td>${cervMois.reduce((a,b)=>a+b,0)}</td><td><strong>${saiMois.reduce((a,b)=>a+b,0)+chiMois.reduce((a,b)=>a+b,0)+cervMois.reduce((a,b)=>a+b,0)}</strong></td>
+</tr>`;
+
+// ── PAGE 4 ──
+
+// SAI line
+new Chart(document.getElementById('chartSAILine'),{type:'line',
+  data:{labels:['2023','2024','2025'],
+    datasets:[
+      {label:'Prélèvements SAI',data:[1054,1117,1482],borderColor:C.success,backgroundColor:C.success+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:8,pointBackgroundColor:C.success,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Attribution annuelle',data:[1764,1765,1765],borderColor:C.forest,backgroundColor:'transparent',borderWidth:2,borderDash:[8,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:false,min:0,grid:{color:'#e8ece8'}},x:{grid:{display:false}}}}
+});
+
+// CHI line
+new Chart(document.getElementById('chartCHILine'),{type:'line',
+  data:{labels:['2023','2024','2025'],
+    datasets:[
+      {label:'Prélèvements CHI',data:[399,258,488],borderColor:C.info,backgroundColor:C.info+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:8,pointBackgroundColor:C.info,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Attribution annuelle',data:[633,625,624],borderColor:C.forest,backgroundColor:'transparent',borderWidth:2,borderDash:[8,4],pointRadius:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:false,min:0,grid:{color:'#e8ece8'}},x:{grid:{display:false}}}}
+});
+
+// Radar taux
+new Chart(document.getElementById('chartTauxRadar'),{type:'radar',
+  data:{labels:['CEM1','CEM2','CEF','CHI','SAI','DAI','MOUF'],
+    datasets:[
+      {label:'2023',data:[46,120,24,63,60,33,0],borderColor:C.success,backgroundColor:C.success+'22',borderWidth:2,pointRadius:4},
+      {label:'2024',data:[85,100,22,41,63,0,0],borderColor:C.warning,backgroundColor:C.warning+'22',borderWidth:2,pointRadius:4},
+      {label:'2025',data:[100,80,65,78,84,67,0],borderColor:C.info,backgroundColor:C.info+'22',borderWidth:2,pointRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{r:{beginAtZero:true,max:130,
+      ticks:{callback:v=>v+'%',font:{size:9},stepSize:20},
+      grid:{color:'#d0ddd0'},pointLabels:{font:{size:11,weight:'bold'}}}}}
+});
+
+// Cervidés line
+new Chart(document.getElementById('chartCervLine'),{type:'line',
+  data:{labels:['2023','2024','2025'],
+    datasets:[
+      {label:'CEM1',data:[6,11,20],borderColor:C.forest,borderWidth:2.5,pointRadius:6,tension:0.3,backgroundColor:'transparent'},
+      {label:'CEM2',data:[6,5,4],borderColor:C.forestL,borderWidth:2.5,pointRadius:6,tension:0.3,backgroundColor:'transparent'},
+      {label:'CEF',data:[9,8,24],borderColor:C.info,borderWidth:2.5,pointRadius:6,tension:0.3,backgroundColor:'transparent',borderDash:[4,3]},
+      {label:'DAI',data:[1,0,2],borderColor:C.accent,borderWidth:2,pointRadius:5,tension:0.3,backgroundColor:'transparent',borderDash:[6,4]}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top'}},
+    scales:{y:{beginAtZero:true,grid:{color:'#e8ece8'}},x:{grid:{display:false}}}}
+});
+
+// Synthèse barre horizontale
+new Chart(document.getElementById('chartSynthese'),{type:'bar',
+  data:{labels:['CEM1 (95%)','CEM2 (94%)','CEF (37%)','CHI (61%)','SAI (69%)','DAI (30%)','MOUF (0%)'],
+    datasets:[
+      {label:'Prélevés',data:[37,15,41,1145,3653,3,0],backgroundColor:[C.purple,C.purple,C.warning,C.info,C.success,C.warning,C.danger],borderRadius:6,borderWidth:0},
+      {label:'Restant',data:[2,1,70,727,1641,7,4],backgroundColor:'#e8ece8',borderRadius:6,borderWidth:0}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?` Prélevés: ${ctx.parsed.x}`:` Restant: ${ctx.parsed.x}`}}},
+    scales:{x:{stacked:true,beginAtZero:true,grid:{color:'#e8ece8'}},y:{stacked:true,grid:{display:false}}}}
+});
+
+// ══════════════════════════════════════ PAGE 6 – SOUS-PERFORMANTS ═══
+
+// Données SAI < 50 % (attribution / prélèvements triénnaux)
+const saiUnder = [
+  {n:'TURPIN Jean-Louis',    a:6,   p:0,   t:0.00},
+  {n:'CROZAT Jean-François', a:5,   p:0,   t:0.00},
+  {n:'ARNEFAUX Gilles',      a:6,   p:0,   t:0.00},
+  {n:'ASSOC. Forêt Abbaye',  a:5,   p:0,   t:0.00},
+  {n:'AUBAS Yves',           a:11,  p:2,   t:18.18},
+  {n:'LOUIS Richard',        a:78,  p:16,  t:20.51},
+  {n:'DUSSAUSSOY Luc',       a:9,   p:2,   t:22.22},
+  {n:'DEWEVER Régis',        a:30,  p:7,   t:23.33},
+  {n:'GARNIER Emmanuel',     a:21,  p:5,   t:23.81},
+  {n:'FELTRIN Frédéric',     a:30,  p:10,  t:33.33},
+  {n:'VAN DORPÉ Dominique',  a:9,   p:3,   t:33.33},
+  {n:'HINCELIN David',       a:12,  p:4,   t:33.33},
+  {n:'RICHARD Daniel',       a:9,   p:3,   t:33.33},
+  {n:'STRAGIER Quentin',     a:19,  p:7,   t:36.84},
+  {n:'BOILLEAU Jean-Paul',   a:8,   p:3,   t:37.50},
+  {n:'DUBOIS Sylvain',       a:21,  p:8,   t:38.10},
+  {n:'MAHIEU Laurent',       a:77,  p:30,  t:38.96},
+  {n:'BOUDIN Sonia',         a:66,  p:28,  t:42.42},
+  {n:'DERIVIERE Thierry',    a:9,   p:4,   t:44.44},
+];
+
+// Données CHI < 50 %
+const chiUnder = [
+  {n:'TURPIN Jean-Louis',         a:2,   p:0,   t:0.00},
+  {n:'VRAYET Thibaut',            a:3,   p:0,   t:0.00},
+  {n:'DUWER Alain',               a:4,   p:0,   t:0.00},
+  {n:'POTELLET Gérard',           a:3,   p:0,   t:0.00},
+  {n:'STRAGIER Quentin',          a:3,   p:0,   t:0.00},
+  {n:'LECLERE Dominique',         a:15,  p:0,   t:0.00},
+  {n:'CROZAT Jean-François',      a:3,   p:0,   t:0.00},
+  {n:'ASSOC. Forêt Abbaye',       a:2,   p:0,   t:0.00},
+  {n:'GF Bois de Gros Mont',      a:18,  p:3,   t:16.67},
+  {n:'TORTOROLO Sylvain',         a:99,  p:23,  t:23.23},
+  {n:'CHAIN Raphaël',             a:21,  p:5,   t:23.81},
+  {n:'RIGAUT Olivier',            a:12,  p:3,   t:25.00},
+  {n:'LEFEVRE Pierre',            a:57,  p:16,  t:28.07},
+  {n:'MAHIEU Laurent',            a:21,  p:6,   t:28.57},
+  {n:'LOUIS Richard',             a:30,  p:9,   t:30.00},
+  {n:'PREVOST Jean-Luc',          a:6,   p:2,   t:33.33},
+  {n:'LECOCQ Christophe',         a:3,   p:1,   t:33.33},
+  {n:'HUBIER Denis',              a:9,   p:3,   t:33.33},
+  {n:'NOEL Jean-Luc',             a:15,  p:5,   t:33.33},
+  {n:'FRAEYMAN Fabien',           a:9,   p:3,   t:33.33},
+  {n:'BOUDIN Sonia',              a:15,  p:5,   t:33.33},
+  {n:'LEGER (assoc.)',            a:102, p:37,  t:36.27},
+  {n:'COULONGES COHAN',           a:42,  p:16,  t:38.10},
+  {n:'GRIGNON Jean-Marc',         a:30,  p:12,  t:40.00},
+  {n:'ASSOC. Forêt Abbaye (Vez.)',a:45,  p:20,  t:44.44},
+  {n:'FELTRIN Frédéric',          a:21,  p:10,  t:47.62},
+  {n:'LEROY Didier',              a:99,  p:49,  t:49.49},
+];
+
+// ── Graphique SAI sous-performants ──
+(function(){
+  const sorted = [...saiUnder].sort((a,b)=>a.t-b.t);
+  const labels = sorted.map(d=>d.n);
+  const colors = sorted.map(d=> d.t===0?'#c0392b': d.t<25?'#e74c3c': d.t<40?'#e67e22':'#f39c12');
+  new Chart(document.getElementById('chartSAIUnder'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Attribution',  data:sorted.map(d=>d.a), backgroundColor:'rgba(52,73,94,0.35)', borderColor:'#34495e', borderWidth:1},
+        {label:'Prélèvements', data:sorted.map(d=>d.p), backgroundColor:colors, borderColor:'rgba(0,0,0,0.1)', borderWidth:1},
+      ]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      plugins:{legend:{position:'top'},
+        tooltip:{callbacks:{
+          afterLabel:ctx=> ctx.datasetIndex===1? `Taux : ${sorted[ctx.dataIndex].t.toFixed(1)} %`:''
+        }}
+      },
+      scales:{x:{beginAtZero:true,title:{display:true,text:'Individus'}},
+              y:{ticks:{font:{size:10}}}}
+    }
+  });
+})();
+
+// ── Graphique CHI sous-performants ──
+(function(){
+  const sorted = [...chiUnder].sort((a,b)=>a.t-b.t);
+  const labels = sorted.map(d=>d.n);
+  const colors = sorted.map(d=> d.t===0?'#8e44ad': d.t<25?'#9b59b6': d.t<40?'#2980b9':'#3498db');
+  new Chart(document.getElementById('chartCHIUnder'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Attribution',  data:sorted.map(d=>d.a), backgroundColor:'rgba(52,73,94,0.35)', borderColor:'#34495e', borderWidth:1},
+        {label:'Prélèvements', data:sorted.map(d=>d.p), backgroundColor:colors, borderColor:'rgba(0,0,0,0.1)', borderWidth:1},
+      ]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      plugins:{legend:{position:'top'},
+        tooltip:{callbacks:{
+          afterLabel:ctx=> ctx.datasetIndex===1? `Taux : ${sorted[ctx.dataIndex].t.toFixed(1)} %`:''
+        }}
+      },
+      scales:{x:{beginAtZero:true,title:{display:true,text:'Individus'}},
+              y:{ticks:{font:{size:10}}}}
+    }
+  });
+})();
+
+// ── Scatter double-sous-performance ──
+(function(){
+  // Détenteurs présents dans les deux listes
+  const saiMap = Object.fromEntries(saiUnder.map(d=>[d.n,d.t]));
+  const chiMap = Object.fromEntries(chiUnder.map(d=>[d.n,d.t]));
+  const common = saiUnder.filter(d=>chiMap[d.n]!==undefined).map(d=>({
+    x: d.t,
+    y: chiMap[d.n],
+    r: Math.max(6, Math.sqrt(d.a)*2),
+    n: d.n
+  }));
+  new Chart(document.getElementById('chartScatterUnder'), {
+    type:'bubble',
+    data:{
+      datasets:[{
+        label:'Détenteurs (SAI% vs CHI%)',
+        data: common,
+        backgroundColor:'rgba(231,76,60,0.55)',
+        borderColor:'#c0392b',
+        borderWidth:1
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label:ctx=>{
+            const d=ctx.raw;
+            return `${d.n} | SAI:${d.x.toFixed(1)}% CHI:${d.y.toFixed(1)}%`;
+          }
+        }},
+        annotation:{
+          annotations:{
+            lineV:{type:'line',xMin:50,xMax:50,borderColor:'#e67e22',borderWidth:1,borderDash:[4,4]},
+            lineH:{type:'line',yMin:50,yMax:50,borderColor:'#e67e22',borderWidth:1,borderDash:[4,4]}
+          }
+        }
+      },
+      scales:{
+        x:{min:0,max:55,title:{display:true,text:'Taux réalisation SAI (%)'}},
+        y:{min:0,max:55,title:{display:true,text:'Taux réalisation CHI (%)'}}
+      }
+    }
+  });
+})();
+
+// ── Tableau fusionné SAI + CHI sous-performants ──
+(function(){
+  const allNames = [...new Set([...saiUnder.map(d=>d.n),...chiUnder.map(d=>d.n)])].sort();
+  const saiMap = Object.fromEntries(saiUnder.map(d=>[d.n,d]));
+  const chiMap = Object.fromEntries(chiUnder.map(d=>[d.n,d]));
+  const tbody = document.getElementById('underTableBody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  allNames.forEach(name=>{
+    const s = saiMap[name];
+    const c = chiMap[name];
+    const saiTaux = s ? s.t : null;
+    const chiTaux = c ? c.t : null;
+    // Statut
+    let statut = '';
+    const zero = (saiTaux===0||chiTaux===0);
+    const doubleUnder = (saiTaux!==null && chiTaux!==null);
+    if(saiTaux===0 && chiTaux===0) statut = '<span style="background:#c0392b;color:#fff;padding:2px 7px;border-radius:3px;font-size:0.72rem">⛔ Inactif total</span>';
+    else if(saiTaux===0||chiTaux===0) statut = '<span style="background:#e74c3c;color:#fff;padding:2px 7px;border-radius:3px;font-size:0.72rem">🚫 0 prélèvement</span>';
+    else if(doubleUnder) statut = '<span style="background:#e67e22;color:#fff;padding:2px 7px;border-radius:3px;font-size:0.72rem">⚠️ Double sous-perf.</span>';
+    else statut = '<span style="background:#f39c12;color:#fff;padding:2px 7px;border-radius:3px;font-size:0.72rem">📉 Sous-perf.</span>';
+
+    function colorCell(t){
+      if(t===null) return 'color:#aaa';
+      if(t===0) return 'color:#c0392b;font-weight:700';
+      if(t<25) return 'color:#e74c3c;font-weight:700';
+      if(t<40) return 'color:#e67e22;font-weight:600';
+      return 'color:#f39c12;font-weight:600';
+    }
+    const row = `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:6px 10px;font-weight:500">${name}</td>
+      <td style="padding:6px 10px;text-align:center">${s?s.a:'-'}</td>
+      <td style="padding:6px 10px;text-align:center">${s?s.p:'-'}</td>
+      <td style="padding:6px 10px;text-align:center;${s?colorCell(s.t):''}">${s?s.t.toFixed(1)+'%':'-'}</td>
+      <td style="padding:6px 10px;text-align:center">${c?c.a:'-'}</td>
+      <td style="padding:6px 10px;text-align:center">${c?c.p:'-'}</td>
+      <td style="padding:6px 10px;text-align:center;${c?colorCell(c.t):''}">${c?c.t.toFixed(1)+'%':'-'}</td>
+      <td style="padding:6px 10px;text-align:center">${statut}</td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend',row);
+  });
+})();
+
+</script>
+</body>
+</html>
