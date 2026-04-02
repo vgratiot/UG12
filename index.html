@@ -153,7 +153,7 @@
   </div>
   <div class="header-right">
     <div class="header-badge">🗓 Saison 2025 · Bilan Final</div>
-    <div class="update-badge">⟳ MÀJ 16/03/2026</div>
+    <div class="update-badge">⟳ MÀJ 02/04/2026</div>
   </div>
 </header>
 
@@ -164,12 +164,14 @@
   <div class="nav-tab" onclick="showPage('p4',this)">📈 Dynamique Annuelle</div>
   <div class="nav-tab" onclick="showPage('p5',this)">🌿 Saisonnalité 2025</div>
   <div class="nav-tab" onclick="showPage('p6',this)">⚠️ Sous-Performants</div>
+  <div class="nav-tab" onclick="showPage('p7',this)">🔀 Croisement Saisonnalité</div>
+  <div class="nav-tab" onclick="showPage('p8',this)">🐗 SAI &lt; 80% lisible</div>
 </nav>
 
 <!-- ══ PAGE 1 – VUE MASSIF ══ -->
 <div id="p1" class="page active">
 
-  <div class="section-title"><span class="icon">🎯</span> KPI Globaux – Taux de Réalisation Triennal (Bilan 16/03/2026) <div class="section-line"></div></div>
+  <div class="section-title"><span class="icon">🎯</span> KPI Globaux – Taux de Réalisation Triennal (Bilan 02/04/2026) <div class="section-line"></div></div>
 
   <div class="kpi-grid">
     <div class="kpi-card near100" data-icon="🦌">
@@ -217,7 +219,7 @@
     <div class="kpi-card accent" data-icon="🏹">
       <div class="kpi-label">Total Prélèvements 2025</div>
       <div class="kpi-value" style="color:var(--accent)">2 002</div>
-      <div class="kpi-sub">CHI 488 · SAI 1 482 · CER 28</div>
+      <div class="kpi-sub">CHI 488 · SAI 1 487 · CER 48</div>
       <div class="kpi-delta up">↑ +101% vs déc. 2025</div>
     </div>
   </div>
@@ -369,7 +371,7 @@
   <div class="section-title"><span class="icon">🐗</span> Structure des Prélèvements Sanglier (SAI) <div class="section-line"></div></div>
   <div class="chart-grid-2">
     <div class="chart-card">
-      <h3>🐗 Répartition SAI – Saison 2025 (1 482 total)</h3>
+      <h3>🐗 Répartition SAI – Saison 2025 (1 487 total)</h3>
       <div class="chart-canvas-wrap" style="height:280px"><canvas id="chartSAI2025"></canvas></div>
     </div>
     <div class="chart-card">
@@ -478,7 +480,7 @@
           <td>🐗 SAI</td><td>5 294</td>
           <td>1 054</td><td><span class="badge badge-success">60%</span></td>
           <td>1 117</td><td><span class="badge badge-success">63%</span></td>
-          <td>1 482</td><td><span class="badge badge-success">84%</span></td>
+          <td>1 487</td><td><span class="badge badge-success">84%</span></td>
           <td><b>3 653</b></td><td><span class="badge badge-success">69%</span></td>
         </tr>
         <tr>
@@ -517,7 +519,7 @@
 
   <div class="section-title"><span class="icon">📅</span> Saisonnalité 2025 – Source des données <div class="section-line"></div></div>
   <div style="background:#fff;border-radius:12px;padding:14px 20px;margin-bottom:22px;box-shadow:0 2px 8px rgba(0,0,0,0.07);font-size:0.82rem;color:#4a5a4a;border-left:4px solid #4a8c5c">
-    <strong style="color:#1a3c2a">📋 Méthodologie :</strong> Les dates individuelles de prélèvement (bracelet par bracelet) sont extraites du journal de bord de chaque détenteur pour la saison 2025 (juin 2025 – mars 2026). Les courbes mensuelles sont construites par agrégation et mise à l'échelle sur les totaux officiels SAI=1 482 et CHI=488. Pour 2023/2024, seuls les totaux annuels sont disponibles dans ce document.
+    <strong style="color:#1a3c2a">📋 Méthodologie :</strong> Les dates individuelles de prélèvement (bracelet par bracelet) sont extraites du listing de réalisation du 02/04/2026. Les courbes mensuelles SAI sont désormais calculées directement sur les 1 487 prélèvements réellement listés (juin 2025 → mars 2026), sans mise à l’échelle. CHI reste présenté au niveau massif. Pour 2023/2024, seuls les totaux annuels sont disponibles dans ce document.
   </div>
 
   <!-- KPI saisonniers -->
@@ -550,7 +552,7 @@
     <div class="kpi-card" data-icon="🔚">
       <div class="kpi-label">Clôture de saison</div>
       <div class="kpi-value" style="color:#8e44ad;font-size:1.4rem">Mars 26</div>
-      <div class="kpi-sub">Dernier tir : 16/03/2026</div>
+      <div class="kpi-sub">Dernier tir : 29/03/2026</div>
     </div>
   </div>
 
@@ -697,8 +699,144 @@
 
 </div>
 
+<!-- ═══════════════════════════════════════════════════════ PAGE 7 ═══ -->
+<div id="p7" class="page">
+
+  <h2 style="margin:0 0 6px;color:var(--accent)">🔀 Croisement Sous-Performants × Dynamique Saisonnière 2025</h2>
+  <p style="margin:0 0 18px;font-size:0.83rem;color:var(--muted)">
+    Méthodologie : les courbes mensuelles par détenteur sont estimées en appliquant le profil saisonnier du massif
+    (distribution mensuelle observée) aux totaux annuels 2025 de chaque détenteur.
+    La courbe « Massif moyen » représente le taux cumulé de réalisation du plan annuel pour l'ensemble du massif.
+  </p>
+
+  <!-- Sélecteur espèce -->
+  <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+    <span style="font-weight:600;color:var(--forest)">Espèce :</span>
+    <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f4e8;border:2px solid var(--forest);font-weight:600;color:var(--forest)">
+      <input type="radio" name="espP7" value="SAI" checked style="margin-right:5px" onchange="switchP7('SAI')">🐗 SAI
+    </label>
+    <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f0f8;border:2px solid #2980b9;font-weight:600;color:#2980b9">
+      <input type="radio" name="espP7" value="CHI" style="margin-right:5px" onchange="switchP7('CHI')">🦌 CHI
+    </label>
+    <span id="p7CountBadge" style="margin-left:10px;padding:4px 12px;background:var(--danger);color:#fff;border-radius:12px;font-size:0.78rem;font-weight:700"></span>
+  </div>
+
+  <!-- Ligne 1 : Multi-line cumulé + Heatmap -->
+  <div class="chart-grid" style="grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:20px">
+
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title1">📈 Courbes cumulées % plan – Sous-performants SAI vs Massif</div>
+      <div style="font-size:0.74rem;color:var(--muted);margin-bottom:6px">
+        Trait épais vert = moyenne massif · Traits fins = détenteurs &lt; 50% · Seuil 50% = tirets orange
+      </div>
+      <canvas id="chartP7MultiLine" height="320"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title2">🌡️ Heatmap : taux cumulé mensuel % plan annuel</div>
+      <div id="p7HeatmapContainer" style="overflow-x:auto;font-size:0.70rem"></div>
+    </div>
+
+  </div>
+
+  <!-- Ligne 2 : Tendance triennale + Sélecteur détenteur -->
+  <div class="chart-grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title3">📊 Évolution triennale 2023-2025 vs Attribution annuelle</div>
+      <canvas id="chartP7Trend" height="280"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">🔍 Focus détenteur – Courbe mensuelle vs Massif</div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:0.82rem;font-weight:600;color:var(--forest)">Sélectionner un détenteur :</label>
+        <select id="p7DetSelect" style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:0.82rem;margin-top:4px;background:var(--bg-card)" onchange="updateP7Focus()">
+        </select>
+      </div>
+      <canvas id="chartP7Focus" height="220"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Ligne 3 : Tableau récap -->
+  <div class="chart-card">
+    <div class="chart-title" id="p7Title4">📋 Tableau de synthèse – Progression mensuelle estimée (% attribution annuelle cumulé)</div>
+    <div style="overflow-x:auto">
+      <table id="p7SynthTable" style="width:100%;border-collapse:collapse;font-size:0.72rem;white-space:nowrap">
+        <thead id="p7SynthHead"></thead>
+        <tbody id="p7SynthBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ PAGE 8 ═══ -->
+<div id="p8" class="page">
+  <h2 style="margin:0 0 6px;color:var(--accent)">🐗 SAI &lt; 80 % – Courbes mensuelles lisibles par détenteur</h2>
+  <p style="margin:0 0 16px;font-size:0.83rem;color:var(--muted)">
+    Cette vue croise les <strong>sous-performants SAI (&lt; 80 % triennal)</strong> avec la saisonnalité 2025 à partir du <strong>listing réel des prélèvements</strong> du 02/04/2026.
+    Pour chaque détenteur, la courbe rouge montre le cumul mensuel <em>réel</em> 2025 rapporté à son attribution annuelle théorique (attribution triennale / 3), comparé à la <strong>moyenne du massif</strong> en vert.
+    L’affichage est volontairement découpé en cartes paginées pour rester lisible.
+  </p>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:18px">
+    <div class="kpi-card"><div class="kpi-value" id="p8kpi1">47</div><div class="kpi-label">Détenteurs SAI &lt; 80 %</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p8kpi2">21</div><div class="kpi-label">Détenteurs SAI &lt; 50 %</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p8kpi3">7</div><div class="kpi-label">Sans prélèvement 2025</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p8kpi4">1487</div><div class="kpi-label">SAI massif 2025 listés</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p8kpi5">84.2%</div><div class="kpi-label">Réalisation annuelle massif</div></div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:18px">
+    <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+      <div style="min-width:240px;flex:1 1 260px">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Recherche détenteur / code / commune</label>
+        <input id="p8Search" type="text" placeholder="Ex. Dewever, 012/109, Coincy…" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff" />
+      </div>
+      <div style="min-width:220px">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Tri</label>
+        <select id="p8Sort" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff">
+          <option value="rateAsc">Pire taux triennal d’abord</option>
+          <option value="rate2025Asc">Pire taux 2025 d’abord</option>
+          <option value="codeAsc">Code GG</option>
+          <option value="nameAsc">Nom A → Z</option>
+          <option value="communeAsc">Commune A → Z</option>
+        </select>
+      </div>
+      <div style="min-width:140px">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Cartes / page</label>
+        <select id="p8PerPage" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff">
+          <option value="8">8</option>
+          <option value="12" selected>12</option>
+          <option value="16">16</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-left:auto">
+        <button id="p8Prev" style="padding:8px 12px;border:none;border-radius:8px;background:var(--forest);color:#fff;cursor:pointer">← Préc.</button>
+        <div id="p8PageInfo" style="font-size:0.82rem;color:var(--muted);min-width:95px;text-align:center"></div>
+        <button id="p8Next" style="padding:8px 12px;border:none;border-radius:8px;background:var(--forest);color:#fff;cursor:pointer">Suiv. →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-grid" style="grid-template-columns:1.1fr 1fr;gap:16px;margin-bottom:18px">
+    <div class="chart-card">
+      <div class="chart-title">📊 Classement synthétique – 15 pires taux triennaux SAI</div>
+      <canvas id="chartP8Ranking" height="290"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">🗓️ Profil mensuel du massif SAI 2025</div>
+      <canvas id="chartP8Massif" height="290"></canvas>
+    </div>
+  </div>
+
+  <div id="p8Cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px"></div>
+</div>
+
 <footer>
-  Plan de Chasse GG 012 · Massif du Tardenois · LISBRB · Triennal 2023–2025 · Édition 16/03/2026
+  Plan de Chasse GG 012 · Massif du Tardenois · LISBRB · Triennal 2023–2025 · Édition 02/04/2026
 </footer>
 
 <script>
@@ -772,7 +910,7 @@ new Chart(document.getElementById('chartVolAnnuel'), {
   data:{
     labels:['2023','2024','2025'],
     datasets:[
-      {label:'🐗 SAI',data:[1054,1117,1482],backgroundColor:[C.success+'99',C.success+'99',C.success+'ee'],borderColor:C.success,borderWidth:2,borderRadius:6,yAxisID:'y'},
+      {label:'🐗 SAI',data:[1054,1117,1487],backgroundColor:[C.success+'99',C.success+'99',C.success+'ee'],borderColor:C.success,borderWidth:2,borderRadius:6,yAxisID:'y'},
       {label:'🦌 CHI',data:[399,258,488],backgroundColor:[C.info+'88',C.info+'66',C.info+'cc'],borderColor:C.info,borderWidth:2,borderRadius:6,yAxisID:'y2'}
     ]
   },
@@ -891,16 +1029,16 @@ detenteurs.forEach(d=>{
 // SAI 2025 doughnut
 new Chart(document.getElementById('chartSAI2025'),{type:'doughnut',
   data:{labels:['SAIM (Mâle adulte)','SAIML (Mâle léger)','SAIFL (Femelle légère)','SANF (Femelle adulte)'],
-    datasets:[{data:[372,307,368,434],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
+    datasets:[{data:[372,309,369,437],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
   options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
     plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
-      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/1482*100)}%)`}}}}
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/1487*100)}%)`}}}}
 });
 
 // SAI Triennal doughnut
 new Chart(document.getElementById('chartSAITriennal'),{type:'doughnut',
   data:{labels:['SAIM (Mâle adulte)','SAIML (Mâle léger)','SAIFL (Femelle légère)','SANF (Femelle adulte)'],
-    datasets:[{data:[929,814,879,1030],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
+    datasets:[{data:[929,816,880,1033],backgroundColor:[C.forest,C.forestL,C.accent,C.warning],borderColor:'#fff',borderWidth:3}]},
   options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
     plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:7}},
       tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${Math.round(ctx.parsed/3653*100)}%)`}}}}
@@ -960,7 +1098,7 @@ new Chart(document.getElementById('chartCHIStacked'),{type:'bar',
 
 // Cervidés pie
 new Chart(document.getElementById('chartCervPie'),{type:'pie',
-  data:{labels:['CEM1AD','CEM1DA','CEM2AD','CEF (Biche)','CEIJJM (Jeune ♂)','CEIJJF (Jeune ♀)'],
+  data:{labels:['CEM1AD (Cerf 1er bois adéquat)','CEM1DA (Cerf 1er bois défect.)','CEM2AD (Cerf 2e bois)','CEF (Biche)','CEIJJM (Jeune ♂)','CEIJJF (Jeune ♀)'],
     datasets:[{data:[32,5,15,31,7,3],backgroundColor:[C.forest,C.forestL,C.accent,C.info,C.teal,C.purple],borderColor:'#fff',borderWidth:3}]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:5}},
@@ -987,7 +1125,7 @@ const MOIS = ['Juin 25','Juil 25','Aoû 25','Sep 25','Oct 25','Nov 25','Déc 25'
 const MOIS_SHORT = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
 
 // Données mensuelles SAI (scalées sur total=1482)
-const saiMois = [33, 30, 27, 27, 96, 276, 314, 311, 358, 8];
+const saiMois = [29, 15, 14, 18, 93, 311, 325, 331, 335, 16];
 // Données mensuelles CHI (scalées sur total=488)
 const chiMois = [3, 6, 11, 14, 58, 66, 72, 86, 169, 3];
 // Cervidés (CEM1+CEM2+CEF = 48 total)
@@ -1185,7 +1323,7 @@ stBody.innerHTML+=`<tr style="background:#1a3c2a;color:#fff;font-weight:700">
 new Chart(document.getElementById('chartSAILine'),{type:'line',
   data:{labels:['2023','2024','2025'],
     datasets:[
-      {label:'Prélèvements SAI',data:[1054,1117,1482],borderColor:C.success,backgroundColor:C.success+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:8,pointBackgroundColor:C.success,pointBorderColor:'#fff',pointBorderWidth:2},
+      {label:'Prélèvements SAI',data:[1054,1117,1487],borderColor:C.success,backgroundColor:C.success+'22',borderWidth:3,fill:true,tension:0.4,pointRadius:8,pointBackgroundColor:C.success,pointBorderColor:'#fff',pointBorderWidth:2},
       {label:'Attribution annuelle',data:[1764,1765,1765],borderColor:C.forest,backgroundColor:'transparent',borderWidth:2,borderDash:[8,4],pointRadius:0}
     ]},
   options:{responsive:true,maintainAspectRatio:false,
@@ -1447,6 +1585,604 @@ const chiUnder = [
     tbody.insertAdjacentHTML('beforeend',row);
   });
 })();
+
+
+// ══════════════════════════════════════ PAGE 7 – CROISEMENT SAISONNALITÉ ═══
+
+// ── Profils saisonniers du massif (2025, 10 mois Jun→Mar) ──
+const saiMoisP7  = [29,15,14,18,93,311,325,331,335,16];  // total 1487
+const chiMoisP7  = [3,6,11,14,58,66,72,86,169,3];       // total 488
+const TOTAL_SAI  = 1487, TOTAL_CHI = 488;
+const ATTR_SAI_AN = 1765, ATTR_CHI_AN = 624;  // attributions annuelles massif
+
+function cumulP7(arr){ return arr.reduce((a,v,i)=>{ a.push((a[i-1]||0)+v); return a; },[]); }
+const saiCumulP7 = cumulP7(saiMoisP7);
+const chiCumulP7 = cumulP7(chiMoisP7);
+// % plan massif par mois
+const saiPctMassif = saiCumulP7.map(v=>+(v/ATTR_SAI_AN*100).toFixed(1));
+const chiPctMassif = chiCumulP7.map(v=>+(v/ATTR_CHI_AN*100).toFixed(1));
+
+// ── Détenteurs sous-performants (calculés depuis les données dashboard) ──
+// Format: {id, nom, sai_a(triennal), sai23,sai24,sai25, chi_a, chi23,chi24,chi25}
+const sousPerfData = (function(){
+  // sai_a, chi_a = triennaux; /3 = attribution annuelle
+  return [
+    {id:'012/006',nom:'DUBOIS Sylvain',     sai_a:21,  s:[3,1,4],  chi_a:6,   c:[0,1,5]},
+    {id:'012/033',nom:'BOUDIN Sonia',       sai_a:66,  s:[6,16,6], chi_a:21,  c:[6,4,1]},
+    {id:'012/039',nom:'MAHIEU Laurent',     sai_a:77,  s:[23,2,5], chi_a:21,  c:[4,0,2]},
+    {id:'012/068',nom:'LEFEVRE P.(068)',    sai_a:129, s:[18,18,22],chi_a:57, c:[8,5,3]},
+    {id:'012/117',nom:'FELTRIN F.(117)',    sai_a:455, s:[83,88,47],chi_a:150,c:[32,41,51]},
+    // CHI only under-performers
+    {id:'012/007',nom:'GRIGNON J-M',        sai_a:40,  s:[10,15,26],chi_a:30, c:[9,0,3]},
+    {id:'012/011',nom:'RIGAUT Olivier',     sai_a:30,  s:[12,3,13], chi_a:12, c:[3,0,0]},
+    {id:'012/014',nom:'CHAIN Raphaël',      sai_a:78,  s:[15,20,22],chi_a:21, c:[3,1,1]},
+    {id:'012/019',nom:'GF Bois Gros Mont',  sai_a:80,  s:[12,15,27],chi_a:18, c:[1,1,1]},
+    {id:'012/030',nom:'MAIRIE Coulonges',   sai_a:105, s:[35,11,12],chi_a:42, c:[7,3,6]},
+    {id:'012/036',nom:'LECLERE Dominique',  sai_a:21,  s:[6,4,14],  chi_a:15, c:[0,0,0]},
+    {id:'012/042',nom:'HUBIER Denis',       sai_a:36,  s:[7,7,7],   chi_a:9,  c:[2,0,1]},
+    {id:'012/059',nom:'TORTOROLO S.(059)',  sai_a:273, s:[63,48,112],chi_a:99,c:[14,5,4]},
+    {id:'012/064',nom:'FRAEYMAN Fabien',    sai_a:25,  s:[0,3,33],  chi_a:9,  c:[1,0,2]},
+    {id:'012/097',nom:'LEROY Didier',       sai_a:293, s:[85,68,85],chi_a:99, c:[15,9,25]},
+    {id:'012/104',nom:'ASS Forêt Abbaye',   sai_a:108, s:[27,34,40],chi_a:45, c:[5,7,8]},
+    {id:'012/145',nom:'LEFEVRE P.(145)',    sai_a:449, s:[64,103,109],chi_a:102,c:[21,6,10]},
+  ];
+})();
+
+// Seuil de sous-performance : taux triennal < 50 %
+function saiRate(d){ const t=d.s[0]+d.s[1]+d.s[2]; return d.sai_a>0?t/d.sai_a:null; }
+function chiRate(d){ const t=d.c[0]+d.c[1]+d.c[2]; return d.chi_a>0?t/d.chi_a:null; }
+const saiUnderDet = sousPerfData.filter(d=>{ const r=saiRate(d); return r!==null && r<0.5; });
+const chiUnderDet = sousPerfData.filter(d=>{ const r=chiRate(d); return r!==null && r<0.5; });
+
+// Palette couleurs pour les détenteurs
+const PALETTE = [
+  '#e74c3c','#e67e22','#9b59b6','#2980b9','#16a085','#c0392b',
+  '#8e44ad','#d35400','#27ae60','#2c3e50','#f39c12','#1abc9c',
+  '#7f8c8d','#6c5ce7','#fd79a8','#00b894','#e17055','#0984e3'
+];
+
+// Graphiques actifs pour nettoyage
+let chartP7ML = null, chartP7Trend = null, chartP7Focus = null;
+
+function destroyP7(){ [chartP7ML,chartP7Trend,chartP7Focus].forEach(c=>{if(c)c.destroy();}); }
+
+// ── Génération de la page ──
+function buildP7(species){
+  destroyP7();
+  const isSAI = species==='SAI';
+  const moisBase  = isSAI ? saiMoisP7  : chiMoisP7;
+  const totalBase = isSAI ? TOTAL_SAI  : TOTAL_CHI;
+  const attrMassif= isSAI ? ATTR_SAI_AN: ATTR_CHI_AN;
+  const pctMassif = isSAI ? saiPctMassif: chiPctMassif;
+  const underDet  = isSAI ? saiUnderDet  : chiUnderDet;
+  const annKey    = isSAI ? 's' : 'c';
+  const attrKey   = isSAI ? 'sai_a' : 'chi_a';
+  const label     = isSAI ? '🐗 SAI' : '🦌 CHI';
+  const col       = isSAI ? C.success : C.info;
+  const propMois  = moisBase.map(v=>v/totalBase);
+
+  // Badge comptage
+  document.getElementById('p7CountBadge').textContent = `${underDet.length} détenteurs < 50 %`;
+
+  // Titres
+  document.getElementById('p7Title1').textContent = `📈 Courbes cumulées % plan – Sous-performants ${label} vs Massif`;
+  document.getElementById('p7Title2').textContent = `🌡️ Heatmap taux cumulé mensuel – ${label}`;
+  document.getElementById('p7Title3').textContent = `📊 Évolution triennale 2023–2025 vs Attribution annuelle – ${label}`;
+  document.getElementById('p7Title4').textContent = `📋 Tableau de synthèse – progression mensuelle estimée ${label} (% attribution annuelle)`;
+
+  // ── Multi-line cumulé ──
+  const mlDatasets = [
+    {
+      label:'Massif moyen',
+      data: pctMassif,
+      borderColor: col, backgroundColor:'transparent',
+      borderWidth:3.5, pointRadius:4, tension:0.4, pointBackgroundColor:col,
+      borderDash:[], order:0
+    }
+  ];
+  underDet.forEach((d,i)=>{
+    const p25 = d[annKey][2];
+    const attrAn = d[attrKey]/3;
+    if(attrAn===0) return;
+    const estimated = propMois.map(p=>p*p25);
+    const estCumul  = cumulP7(estimated);
+    const pctDet    = estCumul.map(v=>+(v/attrAn*100).toFixed(1));
+    const finalRate = +(p25/attrAn*100).toFixed(1);
+    const c = PALETTE[i%PALETTE.length];
+    mlDatasets.push({
+      label: `${d.nom} (${finalRate}%)`,
+      data: pctDet,
+      borderColor:c, backgroundColor:'transparent',
+      borderWidth:1.5, pointRadius:3, tension:0.4, pointBackgroundColor:c,
+      borderDash:[4,3], order:1
+    });
+  });
+  // Seuil 50%
+  mlDatasets.push({
+    label:'Seuil 50 %',
+    data:Array(10).fill(50),
+    borderColor:'#e67e22',backgroundColor:'transparent',
+    borderWidth:1.5, pointRadius:0, borderDash:[6,4], order:2
+  });
+  mlDatasets.push({
+    label:'Objectif 100 %',
+    data:Array(10).fill(100),
+    borderColor:'#c0392b',backgroundColor:'transparent',
+    borderWidth:1.5, pointRadius:0, borderDash:[3,3], order:3
+  });
+
+  chartP7ML = new Chart(document.getElementById('chartP7MultiLine'),{
+    type:'line',
+    data:{labels:MOIS, datasets:mlDatasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{position:'right',labels:{font:{size:9},padding:5,
+          filter:(item)=>['Massif moyen','Seuil 50 %','Objectif 100 %'].includes(item.text)||item.datasetIndex<6
+        }},
+        tooltip:{callbacks:{
+          title:ctx=>MOIS[ctx[0].dataIndex],
+          label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`
+        }}
+      },
+      scales:{
+        y:{min:0,max:115,grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%',stepSize:20},
+           title:{display:true,text:'% du plan annuel cumulé'}},
+        x:{grid:{color:'#f0f4f0'}}
+      }
+    }
+  });
+
+  // ── Heatmap ──
+  buildHeatmap(underDet, propMois, attrKey, annKey);
+
+  // ── Trend triennal ──
+  buildTrend(underDet, attrKey, annKey, label, col);
+
+  // ── Selector focus ──
+  const sel = document.getElementById('p7DetSelect');
+  sel.innerHTML = '';
+  underDet.forEach((d,i)=>{
+    const opt = document.createElement('option');
+    opt.value = i;
+    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
+    const r=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
+    opt.textContent = `${d.nom} – ${r}% du plan 2025`;
+    sel.appendChild(opt);
+  });
+  // Stocker contexte
+  sel._underDet = underDet;
+  sel._propMois = propMois;
+  sel._attrKey  = attrKey;
+  sel._annKey   = annKey;
+  sel._pctMassif= pctMassif;
+  sel._col      = col;
+  sel._label    = label;
+  updateP7Focus();
+
+  // ── Tableau synthèse ──
+  buildSynthTable(underDet, propMois, attrKey, annKey);
+}
+
+function buildHeatmap(underDet, propMois, attrKey, annKey){
+  const MOIS_S = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
+  // Calcul des % cumulés par détenteur × mois
+  const matrix = underDet.map(d=>{
+    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
+    if(attrAn===0) return Array(10).fill(null);
+    const est=propMois.map(p=>p*p25);
+    const cu =cumulP7(est);
+    return cu.map(v=>+(v/attrAn*100).toFixed(1));
+  });
+
+  function cellColor(v){
+    if(v===null) return '#f5f5f5';
+    if(v===0) return '#c0392b';
+    if(v<15)  return '#e74c3c';
+    if(v<30)  return '#e67e22';
+    if(v<50)  return '#f39c12';
+    if(v<75)  return '#f1c40f';
+    if(v<100) return '#2ecc71';
+    return '#27ae60';
+  }
+  function textColor(v){
+    if(v===null) return '#999';
+    if(v<50) return '#fff';
+    return '#1a3c2a';
+  }
+
+  let tbl = `<table style="border-collapse:collapse;font-size:0.68rem">
+    <thead><tr>
+      <th style="padding:4px 8px;text-align:left;background:var(--forest);color:#fff;position:sticky;left:0;z-index:1">Détenteur</th>`;
+  MOIS_S.forEach(m=>{ tbl+=`<th style="padding:4px 7px;background:var(--forest);color:#fff;text-align:center">${m}</th>`; });
+  tbl+=`<th style="padding:4px 7px;background:var(--forest);color:#fff;text-align:center">Fin</th></tr></thead><tbody>`;
+
+  underDet.forEach((d,i)=>{
+    tbl+=`<tr>`;
+    tbl+=`<td style="padding:4px 8px;font-weight:500;background:var(--bg-card);position:sticky;left:0;border-bottom:1px solid var(--border)">${d.nom}</td>`;
+    matrix[i].forEach(v=>{
+      const bg=cellColor(v); const tc=textColor(v);
+      tbl+=`<td style="padding:4px 6px;text-align:center;background:${bg};color:${tc};border:1px solid rgba(255,255,255,0.2)">${v!==null?v.toFixed(0)+'%':'-'}</td>`;
+    });
+    // Colonne finale = taux réel
+    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
+    const fin=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
+    const bg2=cellColor(fin); const tc2=textColor(fin);
+    tbl+=`<td style="padding:4px 6px;text-align:center;background:${bg2};color:${tc2};font-weight:700;border:1px solid rgba(255,255,255,0.3)">${fin}%</td>`;
+    tbl+=`</tr>`;
+  });
+  tbl+=`</tbody></table>`;
+  document.getElementById('p7HeatmapContainer').innerHTML = tbl;
+}
+
+function buildTrend(underDet, attrKey, annKey, label, col){
+  const labels = underDet.map(d=>{
+    const name=d.nom.split(' ')[0]; return name.length>10?name.slice(0,10)+'…':name;
+  });
+  const attrAn  = underDet.map(d=>+(d[attrKey]/3).toFixed(1));
+  const p2023   = underDet.map(d=>d[annKey][0]);
+  const p2024   = underDet.map(d=>d[annKey][1]);
+  const p2025   = underDet.map(d=>d[annKey][2]);
+  const barColors2025 = underDet.map(d=>{
+    const r=d[annKey][2]/(d[attrKey]/3)*100;
+    return r>=50?C.success:(r>=25?C.warning:C.danger);
+  });
+
+  chartP7Trend = new Chart(document.getElementById('chartP7Trend'),{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {type:'line',label:'Attribution annuelle',data:attrAn,
+         borderColor:'#c0392b',borderWidth:2,borderDash:[6,4],
+         pointRadius:4,pointBackgroundColor:'#c0392b',fill:false,tension:0.3,order:0},
+        {label:'2023',data:p2023,backgroundColor:C.forest+'99',borderRadius:2,order:1},
+        {label:'2024',data:p2024,backgroundColor:C.warning+'bb',borderRadius:2,order:2},
+        {label:'2025',data:p2025,backgroundColor:barColors2025,borderRadius:4,order:3}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top',labels:{font:{size:10}}},
+        tooltip:{callbacks:{
+          label:ctx=>{
+            if(ctx.dataset.type==='line') return `Attribution annuelle: ${ctx.parsed.y}`;
+            const yr=['','2023','2024','2025'][ctx.datasetIndex];
+            const d=underDet[ctx.dataIndex];
+            const a=d[attrKey]/3;
+            const v=ctx.parsed.y;
+            return `${yr}: ${v} (${+(v/a*100).toFixed(0)}% du plan)`;
+          }
+        }}
+      },
+      scales:{
+        y:{beginAtZero:true,grid:{color:'#e8ece8'},
+           title:{display:true,text:`Prélèvements ${label}`}},
+        x:{grid:{display:false},ticks:{font:{size:9}}}
+      }
+    }
+  });
+}
+
+function updateP7Focus(){
+  if(chartP7Focus){ chartP7Focus.destroy(); chartP7Focus=null; }
+  const sel = document.getElementById('p7DetSelect');
+  const idx = parseInt(sel.value)||0;
+  const underDet = sel._underDet;
+  if(!underDet||!underDet[idx]) return;
+  const d = underDet[idx];
+  const propMois = sel._propMois;
+  const attrKey  = sel._attrKey;
+  const annKey   = sel._annKey;
+  const pctMassif= sel._pctMassif;
+  const col      = sel._col;
+
+  const p23=d[annKey][0], p24=d[annKey][1], p25=d[annKey][2];
+  const attrAn = d[attrKey]/3;
+
+  // Courbe 2025 estimée
+  const est25 = propMois.map(p=>p*p25);
+  const cu25  = cumulP7(est25);
+  const pct25 = cu25.map(v=>+(v/attrAn*100).toFixed(1));
+
+  // Courbe 2024 estimée
+  const est24 = propMois.map(p=>p*p24);
+  const cu24  = cumulP7(est24);
+  const pct24 = cu24.map(v=>+(v/attrAn*100).toFixed(1));
+
+  // Courbe 2023 estimée
+  const est23 = propMois.map(p=>p*p23);
+  const cu23  = cumulP7(est23);
+  const pct23 = cu23.map(v=>+(v/attrAn*100).toFixed(1));
+
+  const finalPct = +(p25/attrAn*100).toFixed(1);
+
+  chartP7Focus = new Chart(document.getElementById('chartP7Focus'),{
+    type:'line',
+    data:{
+      labels:MOIS,
+      datasets:[
+        {label:`${d.nom} 2025 (${finalPct}%)`,data:pct25,
+         borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.12)',fill:true,
+         borderWidth:2.5,pointRadius:5,tension:0.4,pointBackgroundColor:'#e74c3c',pointBorderColor:'#fff',pointBorderWidth:2},
+        {label:`${d.nom} 2024`,data:pct24,
+         borderColor:'#f39c12',backgroundColor:'transparent',
+         borderWidth:1.5,pointRadius:3,tension:0.4,borderDash:[4,3]},
+        {label:`${d.nom} 2023`,data:pct23,
+         borderColor:'#7f8c8d',backgroundColor:'transparent',
+         borderWidth:1.5,pointRadius:3,tension:0.4,borderDash:[3,4]},
+        {label:'Massif moyen',data:pctMassif,
+         borderColor:col,backgroundColor:'transparent',
+         borderWidth:2,pointRadius:3,tension:0.4,borderDash:[8,4]},
+        {label:'Seuil 50%',data:Array(10).fill(50),
+         borderColor:'#e67e22',backgroundColor:'transparent',
+         borderWidth:1,pointRadius:0,borderDash:[5,4]}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',labels:{font:{size:9},padding:5}}},
+      scales:{
+        y:{min:0,max:Math.max(120,Math.ceil(Math.max(...pctMassif)/10)*10+20),
+           grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%'}},
+        x:{grid:{color:'#f0f4f0'}}
+      }
+    }
+  });
+}
+
+function buildSynthTable(underDet, propMois, attrKey, annKey){
+  const MOIS_S2 = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
+  // Head
+  let hRow = `<tr style="background:var(--forest);color:#fff">
+    <th style="padding:7px 10px;text-align:left;min-width:130px">Détenteur</th>
+    <th style="padding:7px 8px;text-align:center">Attr.An</th>`;
+  MOIS_S2.forEach(m=>{ hRow+=`<th style="padding:7px 7px;text-align:center">${m}</th>`; });
+  hRow+=`<th style="padding:7px 8px;text-align:center">Total 2025</th>
+    <th style="padding:7px 8px;text-align:center">Taux 2025</th>
+    <th style="padding:7px 8px;text-align:center">Taux triennal</th>
+    <th style="padding:7px 8px;text-align:center">Tendance</th></tr>`;
+  document.getElementById('p7SynthHead').innerHTML = hRow;
+
+  let bRows = '';
+  underDet.forEach(d=>{
+    const p25=d[annKey][2]; const attrAn=+(d[attrKey]/3).toFixed(1);
+    const est25=propMois.map(p=>p*p25);
+    const cu25=cumulP7(est25);
+    const pct25m=cu25.map(v=>+(v/attrAn*100).toFixed(0));
+    const rate25=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
+    const totalTri=d[annKey][0]+d[annKey][1]+d[annKey][2];
+    const rateTri=d[attrKey]>0?+(totalTri/d[attrKey]*100).toFixed(1):0;
+
+    // Tendance : comparer 2025 vs 2023 rates
+    const r23=attrAn>0?+(d[annKey][0]/attrAn*100).toFixed(1):0;
+    const r24=attrAn>0?+(d[annKey][1]/attrAn*100).toFixed(1):0;
+    let trend='➡️';
+    if(rate25>r24+5&&rate25>r23) trend='📈';
+    else if(rate25<r24-5&&rate25<r23) trend='📉';
+    else if(rate25>r24) trend='↗️';
+    else if(rate25<r24) trend='↘️';
+
+    function pctBadge(v){
+      if(v<=0) return `<span style="background:#c0392b;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
+      if(v<30) return `<span style="background:#e74c3c;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
+      if(v<50) return `<span style="background:#e67e22;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
+      if(v<80) return `<span style="background:#f39c12;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
+      return `<span style="background:#27ae60;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
+    }
+
+    bRows += `<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:5px 10px;font-weight:600;font-size:0.73rem">${d.nom}</td>
+      <td style="padding:5px 8px;text-align:center">${attrAn.toFixed(0)}</td>`;
+    pct25m.forEach(v=>{ bRows+=`<td style="padding:5px 6px;text-align:center">${pctBadge(v)}</td>`; });
+    bRows+=`<td style="padding:5px 8px;text-align:center;font-weight:700">${p25}</td>
+      <td style="padding:5px 8px;text-align:center">${pctBadge(rate25)}</td>
+      <td style="padding:5px 8px;text-align:center">${pctBadge(rateTri)}</td>
+      <td style="padding:5px 8px;text-align:center;font-size:1rem">${trend}</td>
+    </tr>`;
+  });
+  document.getElementById('p7SynthBody').innerHTML = bRows;
+}
+
+function switchP7(species){
+  buildP7(species);
+}
+
+// Initialisation P7 au clic sur l'onglet
+document.querySelector('[onclick*="p7"]').addEventListener('click', function(){
+  if(!chartP7ML) buildP7('SAI');
+});
+
+
+// ══════════════════════════════════════ PAGE 8 – SAI < 80% LISIBLE ═══
+const p8Data = [{"code": "012/041", "nom": "TURPIN JEAN-LOUIS", "commune": "COULONGES COHAN", "attr_sai": 6, "sai_2023": 0, "sai_2024": 0, "sai_2025": 0, "total_sai": 0, "taux_sai": 0.0, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 2.0, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/074", "nom": "CROZAT JEAN-FRANCOIS", "commune": "GOUSSANCOURT", "attr_sai": 5, "sai_2023": 0, "sai_2024": 0, "sai_2025": 0, "total_sai": 0, "taux_sai": 0.0, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 1.67, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/102", "nom": "ASS FORET DE L'ABBAYE", "commune": "VEZILLY", "attr_sai": 5, "sai_2023": 0, "sai_2024": 0, "sai_2025": 0, "total_sai": 0, "taux_sai": 0.0, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 1.67, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/140", "nom": "ARNEFAUX GILLES", "commune": "COINCY", "attr_sai": 6, "sai_2023": 0, "sai_2024": 0, "sai_2025": 0, "total_sai": 0, "taux_sai": 0.0, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 2.0, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/018", "nom": "AUBAS YVES", "commune": "CHERY CHARTREUVE", "attr_sai": 11, "sai_2023": 0, "sai_2024": 0, "sai_2025": 2, "total_sai": 2, "taux_sai": 18.18, "monthly_2025": {"2026-01": 2}, "cats_2025": {"SANF": 2}, "listed_2025_entries": 2, "annual_attr_sai": 3.67, "pct_2025_annual": 54.55, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 2, 0, 0]}, {"code": "012/138", "nom": "LOUIS RICHARD", "commune": "COINCY", "attr_sai": 78, "sai_2023": 6, "sai_2024": 5, "sai_2025": 6, "total_sai": 17, "taux_sai": 21.79, "monthly_2025": {"2025-12": 3, "2026-03": 3}, "cats_2025": {"SAIFL": 2, "SAIML": 1, "SAIM": 1, "SANF": 2}, "listed_2025_entries": 6, "annual_attr_sai": 26.0, "pct_2025_annual": 23.08, "monthly_ordered": [0, 0, 0, 0, 0, 0, 3, 0, 0, 3]}, {"code": "012/012", "nom": "DUSSAUSSOY LUC", "commune": "BEUVARDES", "attr_sai": 9, "sai_2023": 1, "sai_2024": 1, "sai_2025": 0, "total_sai": 2, "taux_sai": 22.22, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 3.0, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/058", "nom": "DEWEVER REGIS", "commune": "FERE EN TARDENOIS", "attr_sai": 30, "sai_2023": 1, "sai_2024": 0, "sai_2025": 6, "total_sai": 7, "taux_sai": 23.33, "monthly_2025": {"2025-10": 3, "2026-02": 3}, "cats_2025": {"SAIFL": 2, "SAIM": 3, "SANF": 1}, "listed_2025_entries": 6, "annual_attr_sai": 10.0, "pct_2025_annual": 60.0, "monthly_ordered": [0, 0, 0, 0, 3, 0, 0, 0, 3, 0]}, {"code": "012/073", "nom": "GARNIER EMMANUEL", "commune": "GOUSSANCOURT", "attr_sai": 21, "sai_2023": 1, "sai_2024": 2, "sai_2025": 2, "total_sai": 5, "taux_sai": 23.81, "monthly_2025": {"2025-12": 2}, "cats_2025": {"SAIML": 2}, "listed_2025_entries": 2, "annual_attr_sai": 7.0, "pct_2025_annual": 28.57, "monthly_ordered": [0, 0, 0, 0, 0, 0, 2, 0, 0, 0]}, {"code": "012/025", "nom": "FELTRIN FREDERIC", "commune": "CIERGES", "attr_sai": 30, "sai_2023": 10, "sai_2024": 0, "sai_2025": 0, "total_sai": 10, "taux_sai": 33.33, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 10.0, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/113", "nom": "HINCELIN DAVID", "commune": "VILLERS AGRON", "attr_sai": 12, "sai_2023": 0, "sai_2024": 0, "sai_2025": 4, "total_sai": 4, "taux_sai": 33.33, "monthly_2025": {"2026-01": 4}, "cats_2025": {"SAIFL": 3, "SAIML": 1}, "listed_2025_entries": 4, "annual_attr_sai": 4.0, "pct_2025_annual": 100.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 4, 0, 0]}, {"code": "012/118", "nom": "VAN DORPE DOMINIQUE", "commune": "VILLERS SUR FERE", "attr_sai": 9, "sai_2023": 1, "sai_2024": 1, "sai_2025": 1, "total_sai": 3, "taux_sai": 33.33, "monthly_2025": {"2025-07": 1}, "cats_2025": {"SAIM": 1}, "listed_2025_entries": 1, "annual_attr_sai": 3.0, "pct_2025_annual": 33.33, "monthly_ordered": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/141", "nom": "RICHARD DANIEL", "commune": "COINCY", "attr_sai": 9, "sai_2023": 0, "sai_2024": 2, "sai_2025": 1, "total_sai": 3, "taux_sai": 33.33, "monthly_2025": {"2026-02": 1}, "cats_2025": {"SANF": 1}, "listed_2025_entries": 1, "annual_attr_sai": 3.0, "pct_2025_annual": 33.33, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}, {"code": "012/029", "nom": "STRAGIER QUENTIN", "commune": "COULONGES COHAN", "attr_sai": 19, "sai_2023": 4, "sai_2024": 2, "sai_2025": 1, "total_sai": 7, "taux_sai": 36.84, "monthly_2025": {"2026-01": 1}, "cats_2025": {"SANF": 1}, "listed_2025_entries": 1, "annual_attr_sai": 6.33, "pct_2025_annual": 15.79, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]}, {"code": "012/069", "nom": "BOILLEAU JEAN-PAUL", "commune": "FERE EN TARDENOIS", "attr_sai": 8, "sai_2023": 0, "sai_2024": 0, "sai_2025": 3, "total_sai": 3, "taux_sai": 37.5, "monthly_2025": {"2026-02": 1, "2026-03": 2}, "cats_2025": {"SANF": 1, "SAIFL": 1, "SAIML": 1}, "listed_2025_entries": 3, "annual_attr_sai": 2.67, "pct_2025_annual": 112.5, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 1, 2]}, {"code": "012/006", "nom": "DUBOIS SYLVAIN", "commune": "BEUVARDES", "attr_sai": 21, "sai_2023": 3, "sai_2024": 1, "sai_2025": 4, "total_sai": 8, "taux_sai": 38.1, "monthly_2025": {"2025-10": 1, "2025-11": 1, "2026-01": 2}, "cats_2025": {"SAIML": 2, "SAIM": 2}, "listed_2025_entries": 4, "annual_attr_sai": 7.0, "pct_2025_annual": 57.14, "monthly_ordered": [0, 0, 0, 0, 1, 1, 0, 2, 0, 0]}, {"code": "012/039", "nom": "MAHIEU LAURENT", "commune": "DRAVEGNY", "attr_sai": 77, "sai_2023": 23, "sai_2024": 2, "sai_2025": 5, "total_sai": 30, "taux_sai": 38.96, "monthly_2025": {"2025-08": 1, "2026-01": 4}, "cats_2025": {"SAIM": 1, "SAIFL": 1, "SAIML": 1, "SANF": 2}, "listed_2025_entries": 5, "annual_attr_sai": 25.67, "pct_2025_annual": 19.48, "monthly_ordered": [0, 0, 1, 0, 0, 0, 0, 4, 0, 0]}, {"code": "012/033", "nom": "BOUDIN SONIA", "commune": "COULONGES COHAN", "attr_sai": 66, "sai_2023": 6, "sai_2024": 16, "sai_2025": 6, "total_sai": 28, "taux_sai": 42.42, "monthly_2025": {"2026-02": 6}, "cats_2025": {"SAIM": 1, "SAIML": 2, "SAIFL": 2, "SANF": 1}, "listed_2025_entries": 6, "annual_attr_sai": 22.0, "pct_2025_annual": 27.27, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 6, 0]}, {"code": "012/107", "nom": "DERIVIERE THIERRY", "commune": "VILLENEUVE S/ FERE", "attr_sai": 9, "sai_2023": 1, "sai_2024": 2, "sai_2025": 1, "total_sai": 4, "taux_sai": 44.44, "monthly_2025": {"2025-06": 1}, "cats_2025": {"SAIM": 1}, "listed_2025_entries": 1, "annual_attr_sai": 3.0, "pct_2025_annual": 33.33, "monthly_ordered": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/068", "nom": "LEFEVRE PIERRE", "commune": "FERE EN TARDENOIS", "attr_sai": 129, "sai_2023": 18, "sai_2024": 18, "sai_2025": 22, "total_sai": 58, "taux_sai": 44.96, "monthly_2025": {"2025-10": 8, "2026-01": 12, "2026-02": 2}, "cats_2025": {"SAIML": 4, "SAIFL": 12, "SAIM": 3, "SANF": 3}, "listed_2025_entries": 22, "annual_attr_sai": 43.0, "pct_2025_annual": 51.16, "monthly_ordered": [0, 0, 0, 0, 8, 0, 0, 12, 2, 0]}, {"code": "012/117", "nom": "FELTRIN FREDERIC", "commune": "VILLERS SUR FERE", "attr_sai": 455, "sai_2023": 83, "sai_2024": 88, "sai_2025": 47, "total_sai": 218, "taux_sai": 47.91, "monthly_2025": {"2025-08": 1, "2025-09": 3, "2025-10": 5, "2025-11": 12, "2026-01": 21, "2026-02": 5}, "cats_2025": {"SAIFL": 12, "SAIM": 13, "SAIML": 10, "SANF": 12}, "listed_2025_entries": 47, "annual_attr_sai": 151.67, "pct_2025_annual": 30.99, "monthly_ordered": [0, 0, 1, 3, 5, 12, 0, 21, 5, 0]}, {"code": "012/103", "nom": "THIEFFINE JULIAN", "commune": "VEZILLY", "attr_sai": 56, "sai_2023": 5, "sai_2024": 13, "sai_2025": 10, "total_sai": 28, "taux_sai": 50.0, "monthly_2025": {"2025-06": 5, "2026-01": 2, "2026-02": 3}, "cats_2025": {"SAIM": 5, "SANF": 4, "SAIML": 1}, "listed_2025_entries": 10, "annual_attr_sai": 18.67, "pct_2025_annual": 53.57, "monthly_ordered": [5, 0, 0, 0, 0, 0, 0, 2, 3, 0]}, {"code": "012/106", "nom": "DECAUDAIN PHILIPPE", "commune": "VILLENEUVE S/ FERE", "attr_sai": 8, "sai_2023": 0, "sai_2024": 2, "sai_2025": 2, "total_sai": 4, "taux_sai": 50.0, "monthly_2025": {"2025-12": 1, "2026-02": 1}, "cats_2025": {"SAIFL": 1, "SAIM": 1}, "listed_2025_entries": 2, "annual_attr_sai": 2.67, "pct_2025_annual": 75.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 1, 0, 1, 0]}, {"code": "012/158", "nom": "KEBLI ABDELALI", "commune": "COULONGES COHAN", "attr_sai": 2, "sai_2023": 0, "sai_2024": 1, "sai_2025": 0, "total_sai": 1, "taux_sai": 50.0, "monthly_2025": {}, "cats_2025": {}, "listed_2025_entries": 0, "annual_attr_sai": 0.67, "pct_2025_annual": 0.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/111", "nom": "GRATIOT VINCENT", "commune": "VILLENEUVE S/ FERE", "attr_sai": 51, "sai_2023": 8, "sai_2024": 7, "sai_2025": 11, "total_sai": 26, "taux_sai": 50.98, "monthly_2025": {"2025-07": 2, "2025-08": 3, "2025-12": 6}, "cats_2025": {"SAIML": 2, "SANF": 3, "SAIM": 5, "SAIFL": 1}, "listed_2025_entries": 11, "annual_attr_sai": 17.0, "pct_2025_annual": 64.71, "monthly_ordered": [0, 2, 3, 0, 0, 0, 6, 0, 0, 0]}, {"code": "012/146", "nom": "LOUIS RICHARD", "commune": "BRECY", "attr_sai": 117, "sai_2023": 14, "sai_2024": 21, "sai_2025": 25, "total_sai": 60, "taux_sai": 51.28, "monthly_2025": {"2025-10": 3, "2025-11": 1, "2025-12": 1, "2026-01": 3, "2026-02": 10, "2026-03": 7}, "cats_2025": {"SANF": 7, "SAIFL": 5, "SAIML": 9, "SAIM": 4}, "listed_2025_entries": 25, "annual_attr_sai": 39.0, "pct_2025_annual": 64.1, "monthly_ordered": [0, 0, 0, 0, 3, 1, 1, 3, 10, 7]}, {"code": "012/109", "nom": "DEWEVER REGIS", "commune": "VILLENEUVE S/ FERE", "attr_sai": 455, "sai_2023": 88, "sai_2024": 63, "sai_2025": 99, "total_sai": 250, "taux_sai": 54.95, "monthly_2025": {"2025-06": 7, "2025-07": 6, "2025-09": 4, "2025-10": 1, "2025-11": 28, "2025-12": 11, "2026-01": 14, "2026-02": 28}, "cats_2025": {"SAIM": 22, "SANF": 20, "SAIML": 24, "SAIFL": 33}, "listed_2025_entries": 99, "annual_attr_sai": 151.67, "pct_2025_annual": 65.27, "monthly_ordered": [7, 6, 0, 4, 1, 28, 11, 14, 28, 0]}, {"code": "012/030", "nom": "MAIRIE DE COULONGES COHAN", "commune": "COULONGES COHAN", "attr_sai": 105, "sai_2023": 35, "sai_2024": 11, "sai_2025": 12, "total_sai": 58, "taux_sai": 55.24, "monthly_2025": {"2025-11": 5, "2025-12": 5, "2026-01": 2}, "cats_2025": {"SAIM": 6, "SANF": 5, "SAIML": 1}, "listed_2025_entries": 12, "annual_attr_sai": 35.0, "pct_2025_annual": 34.29, "monthly_ordered": [0, 0, 0, 0, 0, 5, 5, 2, 0, 0]}, {"code": "012/084", "nom": "BOSTYN PHILIPPE", "commune": "RONCHERES", "attr_sai": 9, "sai_2023": 3, "sai_2024": 0, "sai_2025": 2, "total_sai": 5, "taux_sai": 55.56, "monthly_2025": {"2026-01": 1, "2026-02": 1}, "cats_2025": {"SANF": 1, "SAIML": 1}, "listed_2025_entries": 2, "annual_attr_sai": 3.0, "pct_2025_annual": 66.67, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 1, 1, 0]}, {"code": "012/136", "nom": "RICHARD DANIEL", "commune": "COINCY", "attr_sai": 27, "sai_2023": 4, "sai_2024": 3, "sai_2025": 8, "total_sai": 15, "taux_sai": 55.56, "monthly_2025": {"2026-01": 3, "2026-02": 5}, "cats_2025": {"SAIML": 2, "SAIFL": 2, "SANF": 3, "SAIM": 1}, "listed_2025_entries": 8, "annual_attr_sai": 9.0, "pct_2025_annual": 88.89, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 3, 5, 0]}, {"code": "012/028", "nom": "POTELLET GERARD", "commune": "COULONGES COHAN", "attr_sai": 16, "sai_2023": 6, "sai_2024": 2, "sai_2025": 1, "total_sai": 9, "taux_sai": 56.25, "monthly_2025": {"2026-02": 1}, "cats_2025": {"SANF": 1}, "listed_2025_entries": 1, "annual_attr_sai": 5.33, "pct_2025_annual": 18.75, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}, {"code": "012/148", "nom": "BOUDIN SONIA", "commune": "BRECY", "attr_sai": 61, "sai_2023": 8, "sai_2024": 12, "sai_2025": 15, "total_sai": 35, "taux_sai": 57.38, "monthly_2025": {"2025-10": 1, "2025-11": 2, "2025-12": 4, "2026-01": 4, "2026-02": 4}, "cats_2025": {"SANF": 5, "SAIFL": 4, "SAIM": 5, "SAIML": 1}, "listed_2025_entries": 15, "annual_attr_sai": 20.33, "pct_2025_annual": 73.77, "monthly_ordered": [0, 0, 0, 0, 1, 2, 4, 4, 4, 0]}, {"code": "012/042", "nom": "HUBIER DENIS", "commune": "DRAVEGNY", "attr_sai": 36, "sai_2023": 7, "sai_2024": 7, "sai_2025": 7, "total_sai": 21, "taux_sai": 58.33, "monthly_2025": {"2025-08": 2, "2025-09": 2, "2025-10": 1, "2025-11": 2}, "cats_2025": {"SAIML": 3, "SAIFL": 3, "SANF": 1}, "listed_2025_entries": 7, "annual_attr_sai": 12.0, "pct_2025_annual": 58.33, "monthly_ordered": [0, 0, 2, 2, 1, 2, 0, 0, 0, 0]}, {"code": "012/037", "nom": "LECOCQ CHRISTOPHE", "commune": "DRAVEGNY", "attr_sai": 25, "sai_2023": 5, "sai_2024": 5, "sai_2025": 5, "total_sai": 15, "taux_sai": 60.0, "monthly_2025": {"2025-12": 1, "2026-01": 1, "2026-03": 3}, "cats_2025": {"SAIFL": 3, "SANF": 1, "SAIM": 1}, "listed_2025_entries": 5, "annual_attr_sai": 8.33, "pct_2025_annual": 60.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 1, 1, 0, 3]}, {"code": "012/145", "nom": "LEFEVRE PIERRE", "commune": "BRECY", "attr_sai": 449, "sai_2023": 64, "sai_2024": 103, "sai_2025": 109, "total_sai": 276, "taux_sai": 61.47, "monthly_2025": {"2025-09": 3, "2025-10": 14, "2025-11": 26, "2025-12": 23, "2026-01": 23, "2026-02": 20}, "cats_2025": {"SAIM": 25, "SAIML": 14, "SANF": 41, "SAIFL": 29}, "listed_2025_entries": 109, "annual_attr_sai": 149.67, "pct_2025_annual": 72.83, "monthly_ordered": [0, 0, 0, 3, 14, 26, 23, 23, 20, 0]}, {"code": "012/081", "nom": "FERAY JEAN-LUC", "commune": "MAREUIL EN DOLE", "attr_sai": 90, "sai_2023": 6, "sai_2024": 28, "sai_2025": 23, "total_sai": 57, "taux_sai": 63.33, "monthly_2025": {"2025-09": 1, "2025-10": 1, "2025-11": 2, "2025-12": 11, "2026-01": 2, "2026-02": 6}, "cats_2025": {"SAIFL": 8, "SAIML": 6, "SAIM": 6, "SANF": 3}, "listed_2025_entries": 23, "annual_attr_sai": 30.0, "pct_2025_annual": 76.67, "monthly_ordered": [0, 0, 0, 1, 1, 2, 11, 2, 6, 0]}, {"code": "012/040", "nom": "LE ROUX DENIS", "commune": "DRAVEGNY", "attr_sai": 14, "sai_2023": 2, "sai_2024": 3, "sai_2025": 4, "total_sai": 9, "taux_sai": 64.29, "monthly_2025": {"2025-09": 1, "2025-11": 3}, "cats_2025": {"SAIFL": 2, "SAIM": 1, "SANF": 1}, "listed_2025_entries": 4, "annual_attr_sai": 4.67, "pct_2025_annual": 85.71, "monthly_ordered": [0, 0, 0, 1, 0, 3, 0, 0, 0, 0]}, {"code": "012/048", "nom": "BOUDIN SONIA", "commune": "EPIEDS", "attr_sai": 129, "sai_2023": 21, "sai_2024": 29, "sai_2025": 36, "total_sai": 86, "taux_sai": 66.67, "monthly_2025": {"2025-11": 6, "2025-12": 8, "2026-01": 18, "2026-02": 4}, "cats_2025": {"SAIML": 10, "SAIFL": 8, "SANF": 8, "SAIM": 10}, "listed_2025_entries": 36, "annual_attr_sai": 43.0, "pct_2025_annual": 83.72, "monthly_ordered": [0, 0, 0, 0, 0, 6, 8, 18, 4, 0]}, {"code": "012/091", "nom": "POULAIN DANIEL", "commune": "SERGY", "attr_sai": 12, "sai_2023": 1, "sai_2024": 2, "sai_2025": 5, "total_sai": 8, "taux_sai": 66.67, "monthly_2025": {"2026-02": 5}, "cats_2025": {"SAIM": 2, "SANF": 2, "SAIML": 1}, "listed_2025_entries": 5, "annual_attr_sai": 4.0, "pct_2025_annual": 125.0, "monthly_ordered": [0, 0, 0, 0, 0, 0, 0, 0, 5, 0]}, {"code": "012/101", "nom": "CHALMET JULIEN", "commune": "VEZILLY", "attr_sai": 78, "sai_2023": 11, "sai_2024": 17, "sai_2025": 24, "total_sai": 52, "taux_sai": 66.67, "monthly_2025": {"2025-11": 4, "2025-12": 12, "2026-01": 7, "2026-02": 1}, "cats_2025": {"SAIFL": 10, "SAIML": 7, "SANF": 5, "SAIM": 2}, "listed_2025_entries": 24, "annual_attr_sai": 26.0, "pct_2025_annual": 92.31, "monthly_ordered": [0, 0, 0, 0, 0, 4, 12, 7, 1, 0]}, {"code": "012/161", "nom": "ALVOET JULES", "commune": "SERINGES ET NESLES", "attr_sai": 3, "sai_2023": 1, "sai_2024": 0, "sai_2025": 1, "total_sai": 2, "taux_sai": 66.67, "monthly_2025": {"2025-07": 1}, "cats_2025": {"SAIM": 1}, "listed_2025_entries": 1, "annual_attr_sai": 1.0, "pct_2025_annual": 100.0, "monthly_ordered": [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]}, {"code": "012/019", "nom": "GF DU BOIS DE GROS MONT", "commune": "CHERY CHARTREUVE", "attr_sai": 80, "sai_2023": 12, "sai_2024": 15, "sai_2025": 27, "total_sai": 54, "taux_sai": 67.5, "monthly_2025": {"2025-10": 1, "2025-11": 13, "2025-12": 6, "2026-01": 7}, "cats_2025": {"SAIM": 6, "SAIFL": 12, "SAIML": 6, "SANF": 3}, "listed_2025_entries": 27, "annual_attr_sai": 26.67, "pct_2025_annual": 101.25, "monthly_ordered": [0, 0, 0, 0, 1, 13, 6, 7, 0, 0]}, {"code": "012/115", "nom": "SCEA FERRY-FILOU", "commune": "VILLERS AGRON", "attr_sai": 30, "sai_2023": 4, "sai_2024": 5, "sai_2025": 12, "total_sai": 21, "taux_sai": 70.0, "monthly_2025": {"2025-06": 1, "2025-11": 3, "2026-01": 8}, "cats_2025": {"SANF": 6, "SAIML": 2, "SAIM": 2, "SAIFL": 2}, "listed_2025_entries": 12, "annual_attr_sai": 10.0, "pct_2025_annual": 120.0, "monthly_ordered": [1, 0, 0, 0, 0, 3, 0, 8, 0, 0]}, {"code": "012/022", "nom": "ASS DES CHAS. DU TARDENOIS", "commune": "CHERY CHARTREUVE", "attr_sai": 114, "sai_2023": 21, "sai_2024": 27, "sai_2025": 34, "total_sai": 82, "taux_sai": 71.93, "monthly_2025": {"2025-10": 2, "2025-11": 6, "2025-12": 11, "2026-01": 7, "2026-02": 8}, "cats_2025": {"SANF": 8, "SAIM": 12, "SAIFL": 8, "SAIML": 6}, "listed_2025_entries": 34, "annual_attr_sai": 38.0, "pct_2025_annual": 89.47, "monthly_ordered": [0, 0, 0, 0, 2, 6, 11, 7, 8, 0]}, {"code": "012/014", "nom": "CHAIN RAPHAEL", "commune": "BRUYS", "attr_sai": 78, "sai_2023": 15, "sai_2024": 20, "sai_2025": 22, "total_sai": 57, "taux_sai": 73.08, "monthly_2025": {"2025-07": 1, "2025-11": 4, "2025-12": 7, "2026-01": 10}, "cats_2025": {"SANF": 9, "SAIFL": 4, "SAIM": 3, "SAIML": 6}, "listed_2025_entries": 22, "annual_attr_sai": 26.0, "pct_2025_annual": 84.62, "monthly_ordered": [0, 1, 0, 0, 0, 4, 7, 10, 0, 0]}, {"code": "012/092", "nom": "DOUART ALAIN", "commune": "SERGY", "attr_sai": 15, "sai_2023": 4, "sai_2024": 3, "sai_2025": 4, "total_sai": 11, "taux_sai": 73.33, "monthly_2025": {"2025-06": 1, "2025-12": 2, "2026-01": 1}, "cats_2025": {"SAIML": 1, "SANF": 1, "SAIM": 2}, "listed_2025_entries": 4, "annual_attr_sai": 5.0, "pct_2025_annual": 80.0, "monthly_ordered": [1, 0, 0, 0, 0, 0, 2, 1, 0, 0]}, {"code": "012/135", "nom": "DEWEVER REGIS", "commune": "COINCY", "attr_sai": 78, "sai_2023": 11, "sai_2024": 10, "sai_2025": 41, "total_sai": 62, "taux_sai": 79.49, "monthly_2025": {"2025-06": 1, "2025-07": 3, "2025-10": 7, "2025-11": 1, "2025-12": 13, "2026-01": 6, "2026-02": 10}, "cats_2025": {"SANF": 13, "SAIML": 7, "SAIM": 14, "SAIFL": 7}, "listed_2025_entries": 41, "annual_attr_sai": 26.0, "pct_2025_annual": 157.69, "monthly_ordered": [1, 3, 0, 0, 7, 1, 13, 6, 10, 0]}];
+const p8Months = ['Juin 25','Juil 25','Aoû 25','Sep 25','Oct 25','Nov 25','Déc 25','Jan 26','Fév 26','Mar 26'];
+const p8MassifMonthly = [29,15,14,18,93,311,325,331,335,16];
+const p8MassifAnnualAttr = 1765;
+const p8MassifTotal2025 = 1487;
+const p8MassifCumul = p8MassifMonthly.reduce((a,v,i)=>{ a.push((a[i-1]||0)+v); return a; }, []);
+const p8MassifPct = p8MassifCumul.map(v => +(v / p8MassifAnnualAttr * 100).toFixed(1));
+let p8State = { page:1, perPage:12, search:'', sort:'rateAsc', charts:[], inited:false };
+let p8RankingChart = null, p8MassifChart = null;
+
+function p8Filtered() {
+  let rows = [...p8Data];
+  const q = p8State.search.trim().toLowerCase();
+  if (q) rows = rows.filter(d => (`${d.code} ${d.nom} ${d.commune}`).toLowerCase().includes(q));
+  const sorters = {
+    rateAsc:(a,b)=>(a.taux_sai-b.taux_sai)||a.code.localeCompare(b.code),
+    rate2025Asc:(a,b)=>(a.pct_2025_annual-b.pct_2025_annual)||a.code.localeCompare(b.code),
+    codeAsc:(a,b)=>a.code.localeCompare(b.code),
+    nameAsc:(a,b)=>a.nom.localeCompare(b.nom),
+    communeAsc:(a,b)=>a.commune.localeCompare(b.commune)||a.nom.localeCompare(b.nom)
+  };
+  rows.sort(sorters[p8State.sort] || sorters.rateAsc);
+  return rows;
+}
+
+function p8DestroyCharts() {
+  p8State.charts.forEach(c => { try { c.destroy(); } catch(e) {} });
+  p8State.charts = [];
+  if (p8RankingChart) { try { p8RankingChart.destroy(); } catch(e) {} p8RankingChart = null; }
+  if (p8MassifChart) { try { p8MassifChart.destroy(); } catch(e) {} p8MassifChart = null; }
+}
+
+function p8Color(finalPct) {
+  if (finalPct === 0) return '#c0392b';
+  if (finalPct < 25) return '#e74c3c';
+  if (finalPct < 50) return '#e67e22';
+  if (finalPct < 80) return '#f39c12';
+  return '#27ae60';
+}
+
+function p8Badge(finalPct) {
+  const bg = p8Color(finalPct);
+  return `<span style="background:${bg};color:#fff;padding:2px 7px;border-radius:999px;font-size:0.71rem;font-weight:700">${finalPct.toFixed(1)}%</span>`;
+}
+
+function p8RenderKPIs(rows) {
+  document.getElementById('p8kpi1').textContent = rows.length;
+  document.getElementById('p8kpi2').textContent = rows.filter(d => d.taux_sai < 50).length;
+  document.getElementById('p8kpi3').textContent = rows.filter(d => (d.sai_2025||0) === 0).length;
+  document.getElementById('p8kpi4').textContent = '1487';
+  document.getElementById('p8kpi5').textContent = '84.2%';
+}
+
+function p8RenderOverview(rows) {
+  const top = rows.slice(0,15);
+  p8RankingChart = new Chart(document.getElementById('chartP8Ranking'), {
+    type:'bar',
+    data:{
+      labels: top.map(d => d.code.replace('012/','') + ' · ' + d.nom.split(' ')[0]),
+      datasets:[
+        { label:'Taux triennal SAI', data: top.map(d=>+d.taux_sai), backgroundColor: top.map(d=>p8Color(+d.taux_sai)), borderRadius:6 },
+        { type:'line', label:'Taux 2025 / attribution annuelle', data: top.map(d=>+d.pct_2025_annual), borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.5, pointRadius:4, tension:0.35 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'top'}, tooltip:{callbacks:{
+        afterBody:(items)=>{ const d=top[items[0].dataIndex]; return [`Commune : ${d.commune}`,`Attr. triennale : ${d.attr_sai}`,`2025 : ${d.sai_2025}`]; }
+      }} },
+      scales:{ y:{ beginAtZero:true, max:120, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} }, x:{ grid:{display:false}, ticks:{font:{size:10}} } }
+    }
+  });
+
+  p8MassifChart = new Chart(document.getElementById('chartP8Massif'), {
+    type:'line',
+    data:{
+      labels:p8Months,
+      datasets:[
+        { label:'Cumul massif (% du plan annuel)', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'rgba(31,111,90,0.10)', fill:true, borderWidth:3, pointRadius:5, tension:0.35 },
+        { label:'Seuil 50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderDash:[6,4], borderWidth:1.5, pointRadius:0 },
+        { label:'Objectif 100%', data:Array(10).fill(100), borderColor:'#c0392b', backgroundColor:'transparent', borderDash:[3,4], borderWidth:1.2, pointRadius:0 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'top'}},
+      scales:{ y:{ beginAtZero:true, max:110, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} }, x:{ grid:{color:'#f1f4f1'} } }
+    }
+  });
+}
+
+function p8RenderCards() {
+  const rows = p8Filtered();
+  p8RenderKPIs(rows);
+  p8DestroyCharts();
+  p8RenderOverview(rows);
+
+  const per = parseInt(p8State.perPage,10) || 12;
+  const pageCount = Math.max(1, Math.ceil(rows.length / per));
+  if (p8State.page > pageCount) p8State.page = pageCount;
+  const start = (p8State.page - 1) * per;
+  const pageRows = rows.slice(start, start + per);
+  document.getElementById('p8PageInfo').textContent = `Page ${p8State.page} / ${pageCount}`;
+  document.getElementById('p8Prev').disabled = p8State.page <= 1;
+  document.getElementById('p8Next').disabled = p8State.page >= pageCount;
+  document.getElementById('p8Prev').style.opacity = p8State.page <= 1 ? 0.45 : 1;
+  document.getElementById('p8Next').style.opacity = p8State.page >= pageCount ? 0.45 : 1;
+
+  const host = document.getElementById('p8Cards');
+  host.innerHTML = pageRows.map((d, idx) => {
+    const final2025 = +d.pct_2025_annual;
+    const tri = +d.taux_sai;
+    const zero2025 = (d.sai_2025||0) === 0;
+    const alert = zero2025 ? '⛔ Aucun prélèvement 2025' : (final2025 < 50 ? '⚠️ Très en retard en 2025' : '📉 Sous le rythme du massif');
+    return `
+      <div class="chart-card" style="padding:14px 14px 10px;border-top:4px solid ${p8Color(tri)}">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px">
+          <div>
+            <div style="font-weight:800;color:var(--forest);font-size:0.95rem">${d.nom}</div>
+            <div style="font-size:0.74rem;color:var(--muted)">${d.code} · ${d.commune || 'Commune non lue'}</div>
+          </div>
+          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:end">
+            ${p8Badge(tri)}
+            <span style="font-size:0.70rem;color:var(--muted)">triennal</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;font-size:0.73rem">
+          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Attr. tri</div><div style="font-weight:700">${d.attr_sai}</div></div>
+          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Attr. an</div><div style="font-weight:700">${Math.round(d.annual_attr_sai)}</div></div>
+          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">SAI 2025</div><div style="font-weight:700">${d.sai_2025}</div></div>
+          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Taux 2025</div><div style="font-weight:700;color:${p8Color(final2025)}">${final2025.toFixed(1)}%</div></div>
+        </div>
+        <div style="font-size:0.73rem;margin:0 0 8px;color:${zero2025 ? '#c0392b' : '#5a6b5a'}"><strong>${alert}</strong> · 2023=${d.sai_2023} · 2024=${d.sai_2024} · 2025=${d.sai_2025}</div>
+        <div style="height:170px"><canvas id="p8c_${idx}"></canvas></div>
+      </div>`;
+  }).join('');
+
+  pageRows.forEach((d, idx) => {
+    const annualAttr = d.annual_attr_sai || 1;
+    const cumul = [];
+    d.monthly_ordered.reduce((a,v,i)=>{ const n=a+v; cumul.push(n); return n; },0);
+    const pct = cumul.map(v => +(v / annualAttr * 100).toFixed(1));
+    const ctx = document.getElementById(`p8c_${idx}`);
+    const final2025 = +d.pct_2025_annual;
+    const chart = new Chart(ctx, {
+      type:'line',
+      data:{
+        labels:p8Months,
+        datasets:[
+          { label:'Détenteur', data:pct, borderColor:p8Color(final2025), backgroundColor:'rgba(231,76,60,0.08)', fill:false, borderWidth:2.6, pointRadius:3.5, pointBackgroundColor:p8Color(final2025), tension:0.35 },
+          { label:'Massif moyen', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.2, pointRadius:0, tension:0.35, borderDash:[6,4] },
+          { label:'50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderWidth:1, pointRadius:0, borderDash:[3,4] }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{
+            label:(ctx)=>`${ctx.dataset.label} : ${ctx.parsed.y.toFixed(1)}%`
+          }}
+        },
+        scales:{
+          y:{ beginAtZero:true, min:0, max:Math.max(100, Math.ceil((Math.max(...pct, ...p8MassifPct)+10)/10)*10), ticks:{ callback:v=>v+'%', maxTicksLimit:6 }, grid:{color:'#eef2ee'} },
+          x:{ ticks:{ maxRotation:0, autoSkip:false, font:{size:10} }, grid:{display:false} }
+        }
+      }
+    });
+    p8State.charts.push(chart);
+  });
+}
+
+function p8Wire() {
+  if (p8State.inited) return;
+  p8State.inited = true;
+  document.getElementById('p8Search').addEventListener('input', e => { p8State.search = e.target.value; p8State.page = 1; p8RenderCards(); });
+  document.getElementById('p8Sort').addEventListener('change', e => { p8State.sort = e.target.value; p8State.page = 1; p8RenderCards(); });
+  document.getElementById('p8PerPage').addEventListener('change', e => { p8State.perPage = +e.target.value; p8State.page = 1; p8RenderCards(); });
+  document.getElementById('p8Prev').addEventListener('click', () => { if (p8State.page > 1) { p8State.page--; p8RenderCards(); } });
+  document.getElementById('p8Next').addEventListener('click', () => { const total = p8Filtered().length; const pc = Math.max(1, Math.ceil(total / p8State.perPage)); if (p8State.page < pc) { p8State.page++; p8RenderCards(); } });
+  p8RenderCards();
+}
+
+const p8Tab = document.querySelector('[onclick*="p8"]');
+if (p8Tab) p8Tab.addEventListener('click', () => setTimeout(p8Wire, 40));
 
 </script>
 </body>
