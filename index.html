@@ -139,6 +139,25 @@
   .alert-card.warn .alert-pct { color: var(--warning); }
 
   footer { text-align: center; padding: 16px; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 28px; }
+
+  /* ===== P8 display fixes ===== */
+  .p8-controls { display:flex; gap:12px; align-items:end; flex-wrap:wrap; }
+  .p8-cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(430px,1fr)); gap:16px; align-items:start; }
+  .p8-card { padding:14px 14px 12px; border-top:4px solid var(--forest); min-height: 380px; display:flex; flex-direction:column; }
+  .p8-card-title { font-weight:800; color:var(--forest); font-size:0.95rem; line-height:1.15; }
+  .p8-card-sub { font-size:0.74rem; color:var(--muted); margin-top:2px; }
+  .p8-mini-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:8px 0; font-size:0.73rem; }
+  .p8-mini-box { background:#f7faf7; padding:7px; border-radius:8px; }
+  .p8-chart-wrap { height:210px; position:relative; margin-top:auto; }
+  .p8-overview-canvas { height:320px !important; }
+  .p8-note { font-size:0.73rem; color:var(--muted); margin-bottom:8px; }
+  @media (max-width: 1100px) {
+    .p8-cards-grid { grid-template-columns:1fr; }
+  }
+  @media (max-width: 720px) {
+    .p8-mini-grid { grid-template-columns:repeat(2,1fr); }
+  }
+
 </style>
 </head>
 <body>
@@ -790,7 +809,7 @@
   </div>
 
   <div class="chart-card" style="margin-bottom:18px">
-    <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+    <div class="p8-controls">
       <div style="min-width:240px;flex:1 1 260px">
         <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Recherche détenteur / code / commune</label>
         <input id="p8Search" type="text" placeholder="Ex. Dewever, 012/109, Coincy…" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff" />
@@ -808,8 +827,8 @@
       <div style="min-width:140px">
         <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Cartes / page</label>
         <select id="p8PerPage" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff">
-          <option value="8">8</option>
-          <option value="12" selected>12</option>
+          <option value="8" selected>8</option>
+          <option value="12">12</option>
           <option value="16">16</option>
         </select>
       </div>
@@ -824,15 +843,15 @@
   <div class="chart-grid" style="grid-template-columns:1.1fr 1fr;gap:16px;margin-bottom:18px">
     <div class="chart-card">
       <div class="chart-title">📊 Classement synthétique – 15 pires taux triennaux SAI</div>
-      <canvas id="chartP8Ranking" height="290"></canvas>
+      <canvas id="chartP8Ranking" class="p8-overview-canvas" height="320"></canvas>
     </div>
     <div class="chart-card">
       <div class="chart-title">🗓️ Profil mensuel du massif SAI 2025</div>
-      <canvas id="chartP8Massif" height="290"></canvas>
+      <canvas id="chartP8Massif" class="p8-overview-canvas" height="320"></canvas>
     </div>
   </div>
 
-  <div id="p8Cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px"></div>
+  <div id="p8Cards" class="p8-cards-grid"></div>
 </div>
 
 <footer>
@@ -1715,6 +1734,7 @@ function buildP7(species){
     type:'line',
     data:{labels:MOIS, datasets:mlDatasets},
     options:{
+      indexAxis:'y',
       responsive:true, maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
@@ -2005,7 +2025,10 @@ const p8MassifAnnualAttr = 1765;
 const p8MassifTotal2025 = 1487;
 const p8MassifCumul = p8MassifMonthly.reduce((a,v,i)=>{ a.push((a[i-1]||0)+v); return a; }, []);
 const p8MassifPct = p8MassifCumul.map(v => +(v / p8MassifAnnualAttr * 100).toFixed(1));
-let p8State = { page:1, perPage:12, search:'', sort:'rateAsc', charts:[], inited:false };
+const p8MonthsShort = ['Jui','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
+const p8MaxDetPct = Math.max(...p8Data.map(d => +d.pct_2025_annual));
+const p8GlobalYMax = Math.max(100, Math.ceil(Math.max(p8MaxDetPct, ...p8MassifPct) / 20) * 20);
+let p8State = { page:1, perPage:8, search:'', sort:'rateAsc', charts:[], inited:false };
 let p8RankingChart = null, p8MassifChart = null;
 
 function p8Filtered() {
@@ -2056,10 +2079,10 @@ function p8RenderOverview(rows) {
   p8RankingChart = new Chart(document.getElementById('chartP8Ranking'), {
     type:'bar',
     data:{
-      labels: top.map(d => d.code.replace('012/','') + ' · ' + d.nom.split(' ')[0]),
+      labels: top.map(d => d.code.replace('012/','') + ' · ' + d.nom.slice(0,22)),
       datasets:[
         { label:'Taux triennal SAI', data: top.map(d=>+d.taux_sai), backgroundColor: top.map(d=>p8Color(+d.taux_sai)), borderRadius:6 },
-        { type:'line', label:'Taux 2025 / attribution annuelle', data: top.map(d=>+d.pct_2025_annual), borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.5, pointRadius:4, tension:0.35 }
+        { type:'line', label:'Taux 2025 / attribution annuelle', data: top.map(d=>+d.pct_2025_annual), borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.5, pointRadius:4, tension:0.25 }
       ]
     },
     options:{
@@ -2067,24 +2090,27 @@ function p8RenderOverview(rows) {
       plugins:{ legend:{position:'top'}, tooltip:{callbacks:{
         afterBody:(items)=>{ const d=top[items[0].dataIndex]; return [`Commune : ${d.commune}`,`Attr. triennale : ${d.attr_sai}`,`2025 : ${d.sai_2025}`]; }
       }} },
-      scales:{ y:{ beginAtZero:true, max:120, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} }, x:{ grid:{display:false}, ticks:{font:{size:10}} } }
+      scales:{ x:{ beginAtZero:true, max:p8GlobalYMax, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} }, y:{ grid:{display:false}, ticks:{font:{size:10}} } }
     }
   });
 
   p8MassifChart = new Chart(document.getElementById('chartP8Massif'), {
-    type:'line',
     data:{
-      labels:p8Months,
+      labels:p8MonthsShort,
       datasets:[
-        { label:'Cumul massif (% du plan annuel)', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'rgba(31,111,90,0.10)', fill:true, borderWidth:3, pointRadius:5, tension:0.35 },
-        { label:'Seuil 50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderDash:[6,4], borderWidth:1.5, pointRadius:0 },
-        { label:'Objectif 100%', data:Array(10).fill(100), borderColor:'#c0392b', backgroundColor:'transparent', borderDash:[3,4], borderWidth:1.2, pointRadius:0 }
+        { type:'bar', label:'SAI mensuels massif', data:p8MassifMonthly, backgroundColor:'rgba(31,111,90,0.18)', borderColor:'rgba(31,111,90,0.45)', borderWidth:1.2, borderRadius:4, yAxisID:'yCount' },
+        { type:'line', label:'Cumul massif (% plan annuel)', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'transparent', fill:false, borderWidth:3, pointRadius:4, tension:0.28, yAxisID:'yPct' },
+        { type:'line', label:'Seuil 50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderDash:[6,4], borderWidth:1.5, pointRadius:0, yAxisID:'yPct' }
       ]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{legend:{position:'top'}},
-      scales:{ y:{ beginAtZero:true, max:110, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} }, x:{ grid:{color:'#f1f4f1'} } }
+      scales:{
+        yPct:{ position:'left', beginAtZero:true, max:100, ticks:{callback:v=>v+'%'}, grid:{color:'#e8ece8'} },
+        yCount:{ position:'right', beginAtZero:true, suggestedMax:360, grid:{display:false} },
+        x:{ grid:{display:false} }
+      }
     }
   });
 }
@@ -2113,25 +2139,25 @@ function p8RenderCards() {
     const zero2025 = (d.sai_2025||0) === 0;
     const alert = zero2025 ? '⛔ Aucun prélèvement 2025' : (final2025 < 50 ? '⚠️ Très en retard en 2025' : '📉 Sous le rythme du massif');
     return `
-      <div class="chart-card" style="padding:14px 14px 10px;border-top:4px solid ${p8Color(tri)}">
-        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px">
-          <div>
-            <div style="font-weight:800;color:var(--forest);font-size:0.95rem">${d.nom}</div>
-            <div style="font-size:0.74rem;color:var(--muted)">${d.code} · ${d.commune || 'Commune non lue'}</div>
+      <div class="chart-card p8-card" style="border-top-color:${p8Color(tri)}">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:6px">
+          <div style="min-width:0">
+            <div class="p8-card-title">${d.nom}</div>
+            <div class="p8-card-sub">${d.code} · ${d.commune || 'Commune non lue'}</div>
           </div>
-          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:end">
+          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:end;flex-shrink:0">
             ${p8Badge(tri)}
             <span style="font-size:0.70rem;color:var(--muted)">triennal</span>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;font-size:0.73rem">
-          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Attr. tri</div><div style="font-weight:700">${d.attr_sai}</div></div>
-          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Attr. an</div><div style="font-weight:700">${Math.round(d.annual_attr_sai)}</div></div>
-          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">SAI 2025</div><div style="font-weight:700">${d.sai_2025}</div></div>
-          <div style="background:#f7faf7;padding:7px;border-radius:8px"><div style="color:var(--muted)">Taux 2025</div><div style="font-weight:700;color:${p8Color(final2025)}">${final2025.toFixed(1)}%</div></div>
+        <div class="p8-mini-grid">
+          <div class="p8-mini-box"><div style="color:var(--muted)">Attr. tri</div><div style="font-weight:700">${d.attr_sai}</div></div>
+          <div class="p8-mini-box"><div style="color:var(--muted)">Attr. an</div><div style="font-weight:700">${Math.round(d.annual_attr_sai)}</div></div>
+          <div class="p8-mini-box"><div style="color:var(--muted)">SAI 2025</div><div style="font-weight:700">${d.sai_2025}</div></div>
+          <div class="p8-mini-box"><div style="color:var(--muted)">Taux 2025</div><div style="font-weight:700;color:${p8Color(final2025)}">${final2025.toFixed(1)}%</div></div>
         </div>
-        <div style="font-size:0.73rem;margin:0 0 8px;color:${zero2025 ? '#c0392b' : '#5a6b5a'}"><strong>${alert}</strong> · 2023=${d.sai_2023} · 2024=${d.sai_2024} · 2025=${d.sai_2025}</div>
-        <div style="height:170px"><canvas id="p8c_${idx}"></canvas></div>
+        <div class="p8-note"><strong>${alert}</strong> · 2023=${d.sai_2023} · 2024=${d.sai_2024} · 2025=${d.sai_2025} · échelle commune 0–${p8GlobalYMax}%</div>
+        <div class="p8-chart-wrap"><canvas id="p8c_${idx}"></canvas></div>
       </div>`;
   }).join('');
 
@@ -2145,10 +2171,10 @@ function p8RenderCards() {
     const chart = new Chart(ctx, {
       type:'line',
       data:{
-        labels:p8Months,
+        labels:p8MonthsShort,
         datasets:[
-          { label:'Détenteur', data:pct, borderColor:p8Color(final2025), backgroundColor:'rgba(231,76,60,0.08)', fill:false, borderWidth:2.6, pointRadius:3.5, pointBackgroundColor:p8Color(final2025), tension:0.35 },
-          { label:'Massif moyen', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.2, pointRadius:0, tension:0.35, borderDash:[6,4] },
+          { label:'Détenteur', data:pct, borderColor:p8Color(final2025), backgroundColor:'rgba(231,76,60,0.08)', fill:false, borderWidth:2.6, pointRadius:3, pointHoverRadius:4.5, pointBackgroundColor:p8Color(final2025), tension:0.25 },
+          { label:'Massif moyen', data:p8MassifPct, borderColor:'#1f6f5a', backgroundColor:'transparent', borderWidth:2.2, pointRadius:0, tension:0.25, borderDash:[6,4] },
           { label:'50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderWidth:1, pointRadius:0, borderDash:[3,4] }
         ]
       },
@@ -2161,8 +2187,8 @@ function p8RenderCards() {
           }}
         },
         scales:{
-          y:{ beginAtZero:true, min:0, max:Math.max(100, Math.ceil((Math.max(...pct, ...p8MassifPct)+10)/10)*10), ticks:{ callback:v=>v+'%', maxTicksLimit:6 }, grid:{color:'#eef2ee'} },
-          x:{ ticks:{ maxRotation:0, autoSkip:false, font:{size:10} }, grid:{display:false} }
+          y:{ beginAtZero:true, min:0, max:p8GlobalYMax, ticks:{ callback:v=>v+'%', maxTicksLimit:5 }, grid:{color:'#eef2ee'} },
+          x:{ ticks:{ maxRotation:0, minRotation:0, autoSkip:false, font:{size:10} }, grid:{display:false} }
         }
       }
     });
@@ -2176,13 +2202,14 @@ function p8Wire() {
   document.getElementById('p8Search').addEventListener('input', e => { p8State.search = e.target.value; p8State.page = 1; p8RenderCards(); });
   document.getElementById('p8Sort').addEventListener('change', e => { p8State.sort = e.target.value; p8State.page = 1; p8RenderCards(); });
   document.getElementById('p8PerPage').addEventListener('change', e => { p8State.perPage = +e.target.value; p8State.page = 1; p8RenderCards(); });
+  p8State.perPage = +(document.getElementById('p8PerPage').value || 8);
   document.getElementById('p8Prev').addEventListener('click', () => { if (p8State.page > 1) { p8State.page--; p8RenderCards(); } });
   document.getElementById('p8Next').addEventListener('click', () => { const total = p8Filtered().length; const pc = Math.max(1, Math.ceil(total / p8State.perPage)); if (p8State.page < pc) { p8State.page++; p8RenderCards(); } });
   p8RenderCards();
 }
 
 const p8Tab = document.querySelector('[onclick*="p8"]');
-if (p8Tab) p8Tab.addEventListener('click', () => setTimeout(p8Wire, 40));
+if (p8Tab) p8Tab.addEventListener('click', () => setTimeout(() => { p8Wire(); p8RenderCards(); }, 40));
 
 </script>
 </body>
