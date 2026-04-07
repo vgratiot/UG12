@@ -140,6 +140,26 @@
 
   footer { text-align: center; padding: 16px; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 28px; }
 
+
+  /* ===== P7 display fixes ===== */
+  #p7 .chart-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; margin-bottom:18px; align-items:start; }
+  #p7 .p7-chart-wrap-lg { position:relative; height:360px; }
+  #p7 .p7-chart-wrap-md { position:relative; height:300px; }
+  #p7 .p7-help { font-size:0.74rem; color:var(--muted); margin:4px 0 10px; line-height:1.45; }
+  #p7 .p7-heatmap-wrap { max-height:360px; overflow:auto; border:1px solid var(--border); border-radius:10px; background:#fff; }
+  #p7 #p7HeatmapContainer table { width:max-content; min-width:100%; }
+  #p7 #p7HeatmapContainer thead th { position:sticky; top:0; z-index:3; }
+  #p7 #p7SynthTable thead th { position:sticky; top:0; z-index:2; background:var(--forest); }
+  #p7 #p7SynthTable td:first-child, #p7 #p7SynthTable th:first-child { position:sticky; left:0; z-index:1; background:inherit; }
+  #p7 #p7SynthTable tbody td:first-child { background:#fff; }
+  #p7 .p7-focus-meta { font-size:0.74rem; color:var(--muted); margin:0 0 8px; line-height:1.45; }
+  @media (max-width: 1100px) {
+    #p7 .chart-grid { grid-template-columns:1fr !important; }
+  }
+  @media (max-width: 720px) {
+    #p7 .kpi-grid { grid-template-columns:repeat(2,1fr) !important; }
+  }
+
   /* ===== P8 display fixes ===== */
   .p8-controls { display:flex; gap:12px; align-items:end; flex-wrap:wrap; }
   .p8-cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(430px,1fr)); gap:16px; align-items:start; }
@@ -728,54 +748,67 @@
     La courbe « Massif moyen » représente le taux cumulé de réalisation du plan annuel pour l'ensemble du massif.
   </p>
 
-  <!-- Sélecteur espèce -->
-  <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-    <span style="font-weight:600;color:var(--forest)">Espèce :</span>
-    <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f4e8;border:2px solid var(--forest);font-weight:600;color:var(--forest)">
-      <input type="radio" name="espP7" value="SAI" checked style="margin-right:5px" onchange="switchP7('SAI')">🐗 SAI
-    </label>
-    <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f0f8;border:2px solid #2980b9;font-weight:600;color:#2980b9">
-      <input type="radio" name="espP7" value="CHI" style="margin-right:5px" onchange="switchP7('CHI')">🦌 CHI
-    </label>
-    <span id="p7CountBadge" style="margin-left:10px;padding:4px 12px;background:var(--danger);color:#fff;border-radius:12px;font-size:0.78rem;font-weight:700"></span>
-  </div>
-
-  <!-- Ligne 1 : Multi-line cumulé + Heatmap -->
-  <div class="chart-grid" style="grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:20px">
-
-    <div class="chart-card">
-      <div class="chart-title" id="p7Title1">📈 Courbes cumulées % plan – Sous-performants SAI vs Massif</div>
-      <div style="font-size:0.74rem;color:var(--muted);margin-bottom:6px">
-        Trait épais vert = moyenne massif · Traits fins = détenteurs &lt; 50% · Seuil 50% = tirets orange
+  <!-- Contrôles -->
+  <div class="chart-card" style="margin-bottom:18px">
+    <div class="p8-controls">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span style="font-weight:700;color:var(--forest)">Espèce :</span>
+        <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f4e8;border:2px solid var(--forest);font-weight:700;color:var(--forest)">
+          <input type="radio" name="espP7" value="SAI" checked style="margin-right:5px" onchange="switchP7('SAI')">🐗 SAI
+        </label>
+        <label style="cursor:pointer;padding:6px 16px;border-radius:20px;background:#e8f0f8;border:2px solid #2980b9;font-weight:700;color:#2980b9">
+          <input type="radio" name="espP7" value="CHI" style="margin-right:5px" onchange="switchP7('CHI')">🦌 CHI
+        </label>
       </div>
-      <canvas id="chartP7MultiLine" height="320"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-title" id="p7Title2">🌡️ Heatmap : taux cumulé mensuel % plan annuel</div>
-      <div id="p7HeatmapContainer" style="overflow-x:auto;font-size:0.70rem"></div>
-    </div>
-
-  </div>
-
-  <!-- Ligne 2 : Tendance triennale + Sélecteur détenteur -->
-  <div class="chart-grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-
-    <div class="chart-card">
-      <div class="chart-title" id="p7Title3">📊 Évolution triennale 2023-2025 vs Attribution annuelle</div>
-      <canvas id="chartP7Trend" height="280"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-title">🔍 Focus détenteur – Courbe mensuelle vs Massif</div>
-      <div style="margin-bottom:10px">
-        <label style="font-size:0.82rem;font-weight:600;color:var(--forest)">Sélectionner un détenteur :</label>
-        <select id="p7DetSelect" style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:0.82rem;margin-top:4px;background:var(--bg-card)" onchange="updateP7Focus()">
+      <div style="min-width:180px">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--forest);display:block;margin-bottom:5px">Courbes principales</label>
+        <select id="p7TopN" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff" onchange="switchP7(document.querySelector('input[name=espP7]:checked').value)">
+          <option value="6" selected>6 pires détenteurs</option>
+          <option value="8">8 pires détenteurs</option>
+          <option value="12">12 pires détenteurs</option>
         </select>
       </div>
-      <canvas id="chartP7Focus" height="220"></canvas>
+      <div id="p7CountBadge" style="margin-left:auto;padding:7px 12px;background:var(--danger);color:#fff;border-radius:999px;font-size:0.78rem;font-weight:700"></div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">
+    <div class="kpi-card"><div class="kpi-value" id="p7Kpi1">–</div><div class="kpi-label">Sous-performants affichables</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p7Kpi2">–</div><div class="kpi-label">Très en retard (&lt; 25 % du plan 2025)</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p7Kpi3">–</div><div class="kpi-label">Massif fin de saison</div></div>
+    <div class="kpi-card"><div class="kpi-value" id="p7Kpi4">–</div><div class="kpi-label">Courbes principales visibles</div></div>
+  </div>
+
+  <div class="chart-grid" style="grid-template-columns:1.45fr 1fr;gap:16px;margin-bottom:18px">
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title1">📈 Courbes cumulées % plan – Sous-performants SAI vs Massif</div>
+      <div class="p7-help">Courbes limitées aux cas les plus critiques pour éviter l'effet « spaghetti ». Ligne verte = massif, orange = seuil 50 %, rouge = objectif 100 %.</div>
+      <div class="p7-chart-wrap-lg"><canvas id="chartP7MultiLine"></canvas></div>
     </div>
 
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title2">📊 Classement lisible – taux triennal vs taux 2025</div>
+      <div class="p7-help">Barres horizontales triées du plus faible au plus élevé pour comparer rapidement le retard structurel et le retard 2025.</div>
+      <div class="p7-chart-wrap-lg"><canvas id="chartP7Trend"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-grid" style="grid-template-columns:1.08fr 0.92fr;gap:16px;margin-bottom:18px">
+    <div class="chart-card">
+      <div class="chart-title">🔍 Focus détenteur – courbe mensuelle vs massif</div>
+      <div style="margin-bottom:10px">
+        <label style="font-size:0.82rem;font-weight:700;color:var(--forest)">Sélectionner un détenteur :</label>
+        <select id="p7DetSelect" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-size:0.82rem;margin-top:4px;background:var(--bg-card)" onchange="updateP7Focus()"></select>
+      </div>
+      <div id="p7FocusMeta" class="p7-focus-meta"></div>
+      <div class="p7-chart-wrap-md"><canvas id="chartP7Focus"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title" id="p7Title3">🌡️ Heatmap – taux cumulé mensuel</div>
+      <div class="p7-help">Vue de contrôle compacte sur tous les détenteurs de la sélection courante. Défilement interne pour éviter les débordements d'affichage.</div>
+      <div class="p7-heatmap-wrap"><div id="p7HeatmapContainer" style="font-size:0.70rem"></div></div>
+    </div>
   </div>
 
   <!-- Ligne 3 : Tableau récap -->
@@ -1117,7 +1150,7 @@ new Chart(document.getElementById('chartCHIStacked'),{type:'bar',
 
 // Cervidés pie
 new Chart(document.getElementById('chartCervPie'),{type:'pie',
-  data:{labels:['CEM1AD ','CEM1DA ','CEM2AD ','CEF (Biche)','CEIJJM (Jeune ♂)','CEIJJF (Jeune ♀)'],
+  data:{labels:['CEM1AD (Cerf 1er bois adéquat)','CEM1DA (Cerf 1er bois défect.)','CEM2AD (Cerf 2e bois)','CEF (Biche)','CEIJJM (Jeune ♂)','CEIJJF (Jeune ♀)'],
     datasets:[{data:[32,5,15,31,7,3],backgroundColor:[C.forest,C.forestL,C.accent,C.info,C.teal,C.purple],borderColor:'#fff',borderWidth:3}]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:5}},
@@ -1663,292 +1696,227 @@ const PALETTE = [
 // Graphiques actifs pour nettoyage
 let chartP7ML = null, chartP7Trend = null, chartP7Focus = null;
 
-function destroyP7(){ [chartP7ML,chartP7Trend,chartP7Focus].forEach(c=>{if(c)c.destroy();}); }
+function destroyP7(){ [chartP7ML,chartP7Trend,chartP7Focus].forEach(c=>{ if(c){ try{ c.destroy(); }catch(e){} } }); }
+function p7AnnualAttr(d, attrKey){ return d[attrKey] > 0 ? +(d[attrKey] / 3).toFixed(2) : 0; }
+function p7Rate2025(d, annKey, attrKey){ const a = p7AnnualAttr(d, attrKey); return a > 0 ? +(d[annKey][2] / a * 100).toFixed(1) : 0; }
+function p7RateTri(d, annKey, attrKey){ const total = d[annKey].reduce((s,v)=>s+v,0); return d[attrKey] > 0 ? +(total / d[attrKey] * 100).toFixed(1) : 0; }
+function p7ShortMonths(){ return (typeof MOIS !== 'undefined' ? MOIS : ['Juin 25','Juil 25','Aoû 25','Sep 25','Oct 25','Nov 25','Déc 25','Jan 26','Fév 26','Mar 26']).map(m => m.replace(' 25','').replace(' 26','')); }
+function p7SeriesFor(d, propMois, annKey, attrKey){
+  const attrAn = p7AnnualAttr(d, attrKey);
+  if(attrAn <= 0) return { monthly:Array(10).fill(0), cumul:Array(10).fill(0), pct:Array(10).fill(0), finalPct:0, attrAn:0 };
+  const total2025 = d[annKey][2] || 0;
+  const monthly = propMois.map(p => +(p * total2025).toFixed(4));
+  const cumul = cumulP7(monthly);
+  const pct = cumul.map(v => +(v / attrAn * 100).toFixed(1));
+  return { monthly, cumul, pct, finalPct:+(total2025 / attrAn * 100).toFixed(1), attrAn };
+}
+function p7Color(v){ if(v <= 0) return '#c0392b'; if(v < 25) return '#e74c3c'; if(v < 50) return '#e67e22'; if(v < 80) return '#f39c12'; return '#27ae60'; }
+function p7YMax(series, massif){
+  const vals = [];
+  series.forEach(arr => arr.forEach(v => vals.push(+v || 0)));
+  massif.forEach(v => vals.push(+v || 0));
+  vals.push(50, 100);
+  return Math.max(100, Math.ceil((Math.max(...vals) + 6) / 10) * 10);
+}
 
-// ── Génération de la page ──
 function buildP7(species){
   destroyP7();
-  const isSAI = species==='SAI';
+  const isSAI = species === 'SAI';
   const moisBase  = isSAI ? saiMoisP7  : chiMoisP7;
   const totalBase = isSAI ? TOTAL_SAI  : TOTAL_CHI;
-  const attrMassif= isSAI ? ATTR_SAI_AN: ATTR_CHI_AN;
   const pctMassif = isSAI ? saiPctMassif: chiPctMassif;
-  const underDet  = isSAI ? saiUnderDet  : chiUnderDet;
+  const underBase = isSAI ? saiUnderDet : chiUnderDet;
   const annKey    = isSAI ? 's' : 'c';
   const attrKey   = isSAI ? 'sai_a' : 'chi_a';
   const label     = isSAI ? '🐗 SAI' : '🦌 CHI';
-  const col       = isSAI ? C.success : C.info;
-  const propMois  = moisBase.map(v=>v/totalBase);
+  const massifCol = isSAI ? C.success : C.info;
+  const propMois  = moisBase.map(v => v / totalBase);
+  const shortMonths = p7ShortMonths();
+  const topN = Math.max(3, parseInt((document.getElementById('p7TopN') || {}).value || '6', 10));
 
-  // Badge comptage
+  const underDet = [...underBase].sort((a,b)=>
+    p7Rate2025(a, annKey, attrKey) - p7Rate2025(b, annKey, attrKey) ||
+    p7RateTri(a, annKey, attrKey) - p7RateTri(b, annKey, attrKey) ||
+    a.nom.localeCompare(b.nom)
+  );
+  const mainDet = underDet.slice(0, Math.min(topN, underDet.length));
+  const severe = underDet.filter(d => p7Rate2025(d, annKey, attrKey) < 25).length;
+
   document.getElementById('p7CountBadge').textContent = `${underDet.length} détenteurs < 50 %`;
+  document.getElementById('p7Kpi1').textContent = underDet.length;
+  document.getElementById('p7Kpi2').textContent = severe;
+  document.getElementById('p7Kpi3').textContent = `${pctMassif[pctMassif.length - 1].toFixed(1)}%`;
+  document.getElementById('p7Kpi4').textContent = mainDet.length;
 
-  // Titres
-  document.getElementById('p7Title1').textContent = `📈 Courbes cumulées % plan – Sous-performants ${label} vs Massif`;
-  document.getElementById('p7Title2').textContent = `🌡️ Heatmap taux cumulé mensuel – ${label}`;
-  document.getElementById('p7Title3').textContent = `📊 Évolution triennale 2023–2025 vs Attribution annuelle – ${label}`;
+  document.getElementById('p7Title1').textContent = `📈 Courbes cumulées % plan – ${mainDet.length} cas les plus critiques ${label} vs massif`;
+  document.getElementById('p7Title2').textContent = `📊 Classement lisible – ${label} : taux triennal vs taux 2025`;
+  document.getElementById('p7Title3').textContent = `🌡️ Heatmap – ${label} : taux cumulé mensuel`;
   document.getElementById('p7Title4').textContent = `📋 Tableau de synthèse – progression mensuelle estimée ${label} (% attribution annuelle)`;
 
-  // ── Multi-line cumulé ──
+  const allSeries = mainDet.map(d => p7SeriesFor(d, propMois, annKey, attrKey).pct);
+  const yMax = p7YMax(allSeries, pctMassif);
+
   const mlDatasets = [
-    {
-      label:'Massif moyen',
-      data: pctMassif,
-      borderColor: col, backgroundColor:'transparent',
-      borderWidth:3.5, pointRadius:4, tension:0.4, pointBackgroundColor:col,
-      borderDash:[], order:0
-    }
+    { label:'Massif moyen', data:pctMassif, borderColor:massifCol, backgroundColor:'transparent', borderWidth:3.4, pointRadius:3, pointHoverRadius:5, tension:0.28 },
+    { label:'Seuil 50 %', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderWidth:1.6, pointRadius:0, borderDash:[6,4] },
+    { label:'Objectif 100 %', data:Array(10).fill(100), borderColor:'#c0392b', backgroundColor:'transparent', borderWidth:1.3, pointRadius:0, borderDash:[3,3] }
   ];
-  underDet.forEach((d,i)=>{
-    const p25 = d[annKey][2];
-    const attrAn = d[attrKey]/3;
-    if(attrAn===0) return;
-    const estimated = propMois.map(p=>p*p25);
-    const estCumul  = cumulP7(estimated);
-    const pctDet    = estCumul.map(v=>+(v/attrAn*100).toFixed(1));
-    const finalRate = +(p25/attrAn*100).toFixed(1);
-    const c = PALETTE[i%PALETTE.length];
+  mainDet.forEach((d,i)=>{
+    const s = p7SeriesFor(d, propMois, annKey, attrKey);
+    const color = PALETTE[i % PALETTE.length];
     mlDatasets.push({
-      label: `${d.nom} (${finalRate}%)`,
-      data: pctDet,
-      borderColor:c, backgroundColor:'transparent',
-      borderWidth:1.5, pointRadius:3, tension:0.4, pointBackgroundColor:c,
-      borderDash:[4,3], order:1
+      label:`${d.nom} (${s.finalPct}%)`,
+      data:s.pct,
+      borderColor:color,
+      backgroundColor:'transparent',
+      borderWidth:2,
+      pointRadius:2.5,
+      pointHoverRadius:4,
+      pointBackgroundColor:color,
+      tension:0.22
     });
   });
-  // Seuil 50%
-  mlDatasets.push({
-    label:'Seuil 50 %',
-    data:Array(10).fill(50),
-    borderColor:'#e67e22',backgroundColor:'transparent',
-    borderWidth:1.5, pointRadius:0, borderDash:[6,4], order:2
-  });
-  mlDatasets.push({
-    label:'Objectif 100 %',
-    data:Array(10).fill(100),
-    borderColor:'#c0392b',backgroundColor:'transparent',
-    borderWidth:1.5, pointRadius:0, borderDash:[3,3], order:3
-  });
 
-  chartP7ML = new Chart(document.getElementById('chartP7MultiLine'),{
+  chartP7ML = new Chart(document.getElementById('chartP7MultiLine'), {
     type:'line',
-    data:{labels:MOIS, datasets:mlDatasets},
+    data:{ labels:shortMonths, datasets:mlDatasets },
     options:{
-      indexAxis:'y',
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
       plugins:{
-        legend:{position:'right',labels:{font:{size:9},padding:5,
-          filter:(item)=>['Massif moyen','Seuil 50 %','Objectif 100 %'].includes(item.text)||item.datasetIndex<6
-        }},
-        tooltip:{callbacks:{
-          title:ctx=>MOIS[ctx[0].dataIndex],
-          label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`
-        }}
+        legend:{ position:'bottom', labels:{ boxWidth:12, usePointStyle:true, padding:12, font:{size:10} } },
+        tooltip:{ callbacks:{ label:ctx => `${ctx.dataset.label} : ${ctx.parsed.y.toFixed(1)}%` } }
       },
       scales:{
-        y:{min:0,max:115,grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%',stepSize:20},
-           title:{display:true,text:'% du plan annuel cumulé'}},
-        x:{grid:{color:'#f0f4f0'}}
+        y:{ min:0, max:yMax, grid:{color:'#e8ece8'}, ticks:{ callback:v => v + '%', stepSize:20 }, title:{ display:true, text:'% du plan annuel cumulé' } },
+        x:{ grid:{color:'#f3f6f3'}, ticks:{ maxRotation:0, autoSkip:false } }
       }
     }
   });
 
-  // ── Heatmap ──
+  buildTrend(underDet, attrKey, annKey, label);
   buildHeatmap(underDet, propMois, attrKey, annKey);
 
-  // ── Trend triennal ──
-  buildTrend(underDet, attrKey, annKey, label, col);
-
-  // ── Selector focus ──
   const sel = document.getElementById('p7DetSelect');
   sel.innerHTML = '';
   underDet.forEach((d,i)=>{
     const opt = document.createElement('option');
     opt.value = i;
-    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
-    const r=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
-    opt.textContent = `${d.nom} – ${r}% du plan 2025`;
+    opt.textContent = `${d.nom} – ${p7Rate2025(d, annKey, attrKey)}% en 2025 · ${p7RateTri(d, annKey, attrKey)}% triennal`;
     sel.appendChild(opt);
   });
-  // Stocker contexte
   sel._underDet = underDet;
   sel._propMois = propMois;
-  sel._attrKey  = attrKey;
-  sel._annKey   = annKey;
-  sel._pctMassif= pctMassif;
-  sel._col      = col;
-  sel._label    = label;
+  sel._attrKey = attrKey;
+  sel._annKey = annKey;
+  sel._pctMassif = pctMassif;
+  sel._col = massifCol;
+  sel._label = label;
   updateP7Focus();
-
-  // ── Tableau synthèse ──
   buildSynthTable(underDet, propMois, attrKey, annKey);
 }
 
 function buildHeatmap(underDet, propMois, attrKey, annKey){
   const MOIS_S = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
-  // Calcul des % cumulés par détenteur × mois
-  const matrix = underDet.map(d=>{
-    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
-    if(attrAn===0) return Array(10).fill(null);
-    const est=propMois.map(p=>p*p25);
-    const cu =cumulP7(est);
-    return cu.map(v=>+(v/attrAn*100).toFixed(1));
-  });
+  const matrix = underDet.map(d => p7SeriesFor(d, propMois, annKey, attrKey).pct);
+  function cellColor(v){ if(v <= 0) return '#c0392b'; if(v < 15) return '#e74c3c'; if(v < 30) return '#e67e22'; if(v < 50) return '#f39c12'; if(v < 75) return '#f1c40f'; if(v < 100) return '#7bd389'; return '#27ae60'; }
+  function textColor(v){ return v < 50 ? '#fff' : '#163322'; }
 
-  function cellColor(v){
-    if(v===null) return '#f5f5f5';
-    if(v===0) return '#c0392b';
-    if(v<15)  return '#e74c3c';
-    if(v<30)  return '#e67e22';
-    if(v<50)  return '#f39c12';
-    if(v<75)  return '#f1c40f';
-    if(v<100) return '#2ecc71';
-    return '#27ae60';
-  }
-  function textColor(v){
-    if(v===null) return '#999';
-    if(v<50) return '#fff';
-    return '#1a3c2a';
-  }
-
-  let tbl = `<table style="border-collapse:collapse;font-size:0.68rem">
-    <thead><tr>
-      <th style="padding:4px 8px;text-align:left;background:var(--forest);color:#fff;position:sticky;left:0;z-index:1">Détenteur</th>`;
-  MOIS_S.forEach(m=>{ tbl+=`<th style="padding:4px 7px;background:var(--forest);color:#fff;text-align:center">${m}</th>`; });
-  tbl+=`<th style="padding:4px 7px;background:var(--forest);color:#fff;text-align:center">Fin</th></tr></thead><tbody>`;
+  let tbl = `<table style="border-collapse:separate;border-spacing:0;font-size:0.68rem;min-width:100%"><thead><tr>` +
+            `<th style="padding:6px 8px;text-align:left;background:var(--forest);color:#fff;position:sticky;left:0;z-index:4;min-width:160px">Détenteur</th>`;
+  MOIS_S.forEach(m => { tbl += `<th style="padding:6px 7px;background:var(--forest);color:#fff;text-align:center;min-width:48px">${m}</th>`; });
+  tbl += `<th style="padding:6px 7px;background:var(--forest);color:#fff;text-align:center;min-width:58px">Fin</th></tr></thead><tbody>`;
 
   underDet.forEach((d,i)=>{
-    tbl+=`<tr>`;
-    tbl+=`<td style="padding:4px 8px;font-weight:500;background:var(--bg-card);position:sticky;left:0;border-bottom:1px solid var(--border)">${d.nom}</td>`;
-    matrix[i].forEach(v=>{
-      const bg=cellColor(v); const tc=textColor(v);
-      tbl+=`<td style="padding:4px 6px;text-align:center;background:${bg};color:${tc};border:1px solid rgba(255,255,255,0.2)">${v!==null?v.toFixed(0)+'%':'-'}</td>`;
+    const fin = p7Rate2025(d, annKey, attrKey);
+    tbl += `<tr>`;
+    tbl += `<td style="padding:6px 8px;font-weight:600;background:#fff;position:sticky;left:0;border-bottom:1px solid var(--border)">${d.nom}</td>`;
+    matrix[i].forEach(v => {
+      const bg = cellColor(v); const tc = textColor(v);
+      tbl += `<td style="padding:5px 6px;text-align:center;background:${bg};color:${tc};border-bottom:1px solid rgba(255,255,255,0.35)">${v.toFixed(0)}%</td>`;
     });
-    // Colonne finale = taux réel
-    const p25=d[annKey][2]; const attrAn=d[attrKey]/3;
-    const fin=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
-    const bg2=cellColor(fin); const tc2=textColor(fin);
-    tbl+=`<td style="padding:4px 6px;text-align:center;background:${bg2};color:${tc2};font-weight:700;border:1px solid rgba(255,255,255,0.3)">${fin}%</td>`;
-    tbl+=`</tr>`;
+    tbl += `<td style="padding:5px 6px;text-align:center;background:${cellColor(fin)};color:${textColor(fin)};font-weight:800;border-bottom:1px solid rgba(255,255,255,0.35)">${fin.toFixed(1)}%</td>`;
+    tbl += `</tr>`;
   });
-  tbl+=`</tbody></table>`;
+  tbl += `</tbody></table>`;
   document.getElementById('p7HeatmapContainer').innerHTML = tbl;
 }
 
-function buildTrend(underDet, attrKey, annKey, label, col){
-  const labels = underDet.map(d=>{
-    const name=d.nom.split(' ')[0]; return name.length>10?name.slice(0,10)+'…':name;
-  });
-  const attrAn  = underDet.map(d=>+(d[attrKey]/3).toFixed(1));
-  const p2023   = underDet.map(d=>d[annKey][0]);
-  const p2024   = underDet.map(d=>d[annKey][1]);
-  const p2025   = underDet.map(d=>d[annKey][2]);
-  const barColors2025 = underDet.map(d=>{
-    const r=d[annKey][2]/(d[attrKey]/3)*100;
-    return r>=50?C.success:(r>=25?C.warning:C.danger);
-  });
+function buildTrend(underDet, attrKey, annKey, label){
+  const labels = underDet.map(d => d.nom.length > 26 ? d.nom.slice(0,26) + '…' : d.nom);
+  const triRates = underDet.map(d => p7RateTri(d, annKey, attrKey));
+  const rates25 = underDet.map(d => p7Rate2025(d, annKey, attrKey));
+  const xMax = Math.max(100, Math.ceil((Math.max(...triRates, ...rates25, 50) + 6) / 10) * 10);
 
-  chartP7Trend = new Chart(document.getElementById('chartP7Trend'),{
+  chartP7Trend = new Chart(document.getElementById('chartP7Trend'), {
     type:'bar',
     data:{
       labels,
       datasets:[
-        {type:'line',label:'Attribution annuelle',data:attrAn,
-         borderColor:'#c0392b',borderWidth:2,borderDash:[6,4],
-         pointRadius:4,pointBackgroundColor:'#c0392b',fill:false,tension:0.3,order:0},
-        {label:'2023',data:p2023,backgroundColor:C.forest+'99',borderRadius:2,order:1},
-        {label:'2024',data:p2024,backgroundColor:C.warning+'bb',borderRadius:2,order:2},
-        {label:'2025',data:p2025,backgroundColor:barColors2025,borderRadius:4,order:3}
+        { label:'Taux triennal', data:triRates, backgroundColor:'rgba(124,140,140,0.75)', borderRadius:6, barThickness:12 },
+        { label:'Taux 2025 / plan annuel', data:rates25, backgroundColor:rates25.map(p7Color), borderRadius:6, barThickness:12 }
       ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
+      indexAxis:'y',
+      responsive:true,
+      maintainAspectRatio:false,
       plugins:{
-        legend:{position:'top',labels:{font:{size:10}}},
-        tooltip:{callbacks:{
-          label:ctx=>{
-            if(ctx.dataset.type==='line') return `Attribution annuelle: ${ctx.parsed.y}`;
-            const yr=['','2023','2024','2025'][ctx.datasetIndex];
-            const d=underDet[ctx.dataIndex];
-            const a=d[attrKey]/3;
-            const v=ctx.parsed.y;
-            return `${yr}: ${v} (${+(v/a*100).toFixed(0)}% du plan)`;
-          }
-        }}
+        legend:{ position:'top', labels:{ font:{size:10} } },
+        tooltip:{ callbacks:{ afterBody:(items)=>{ const d = underDet[items[0].dataIndex]; return [`Attribution annuelle : ${p7AnnualAttr(d, attrKey).toFixed(1)}`, `2023/2024/2025 : ${d[annKey].join(' / ')}`]; } } }
       },
       scales:{
-        y:{beginAtZero:true,grid:{color:'#e8ece8'},
-           title:{display:true,text:`Prélèvements ${label}`}},
-        x:{grid:{display:false},ticks:{font:{size:9}}}
+        x:{ beginAtZero:true, max:xMax, ticks:{ callback:v => v + '%' }, grid:{ color:'#e8ece8' }, title:{ display:true, text:'% de réalisation' } },
+        y:{ grid:{ display:false }, ticks:{ autoSkip:false, font:{size:10} } }
       }
     }
   });
 }
 
 function updateP7Focus(){
-  if(chartP7Focus){ chartP7Focus.destroy(); chartP7Focus=null; }
+  if(chartP7Focus){ try{ chartP7Focus.destroy(); }catch(e){} chartP7Focus = null; }
   const sel = document.getElementById('p7DetSelect');
-  const idx = parseInt(sel.value)||0;
-  const underDet = sel._underDet;
-  if(!underDet||!underDet[idx]) return;
+  const idx = parseInt(sel.value || '0', 10);
+  const underDet = sel._underDet || [];
+  if(!underDet[idx]) return;
   const d = underDet[idx];
   const propMois = sel._propMois;
-  const attrKey  = sel._attrKey;
-  const annKey   = sel._annKey;
-  const pctMassif= sel._pctMassif;
-  const col      = sel._col;
+  const attrKey = sel._attrKey;
+  const annKey = sel._annKey;
+  const pctMassif = sel._pctMassif;
+  const col = sel._col;
+  const shortMonths = p7ShortMonths();
+  const attrAn = p7AnnualAttr(d, attrKey);
+  const p23 = d[annKey][0], p24 = d[annKey][1], p25 = d[annKey][2];
 
-  const p23=d[annKey][0], p24=d[annKey][1], p25=d[annKey][2];
-  const attrAn = d[attrKey]/3;
+  const pct25 = p7SeriesFor({ ...d, [annKey]:[0,0,p25] }, propMois, annKey, attrKey).pct;
+  const pct24 = p7SeriesFor({ ...d, [annKey]:[0,0,p24] }, propMois, annKey, attrKey).pct;
+  const pct23 = p7SeriesFor({ ...d, [annKey]:[0,0,p23] }, propMois, annKey, attrKey).pct;
+  const yMax = p7YMax([pct23, pct24, pct25], pctMassif);
+  const triRate = p7RateTri(d, annKey, attrKey);
+  document.getElementById('p7FocusMeta').innerHTML = `<strong>${d.nom}</strong> · attribution annuelle théorique <strong>${attrAn.toFixed(1)}</strong> · 2023=${p23} · 2024=${p24} · 2025=${p25} · taux triennal <strong>${triRate.toFixed(1)}%</strong>`;
 
-  // Courbe 2025 estimée
-  const est25 = propMois.map(p=>p*p25);
-  const cu25  = cumulP7(est25);
-  const pct25 = cu25.map(v=>+(v/attrAn*100).toFixed(1));
-
-  // Courbe 2024 estimée
-  const est24 = propMois.map(p=>p*p24);
-  const cu24  = cumulP7(est24);
-  const pct24 = cu24.map(v=>+(v/attrAn*100).toFixed(1));
-
-  // Courbe 2023 estimée
-  const est23 = propMois.map(p=>p*p23);
-  const cu23  = cumulP7(est23);
-  const pct23 = cu23.map(v=>+(v/attrAn*100).toFixed(1));
-
-  const finalPct = +(p25/attrAn*100).toFixed(1);
-
-  chartP7Focus = new Chart(document.getElementById('chartP7Focus'),{
+  chartP7Focus = new Chart(document.getElementById('chartP7Focus'), {
     type:'line',
     data:{
-      labels:MOIS,
+      labels:shortMonths,
       datasets:[
-        {label:`${d.nom} 2025 (${finalPct}%)`,data:pct25,
-         borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.12)',fill:true,
-         borderWidth:2.5,pointRadius:5,tension:0.4,pointBackgroundColor:'#e74c3c',pointBorderColor:'#fff',pointBorderWidth:2},
-        {label:`${d.nom} 2024`,data:pct24,
-         borderColor:'#f39c12',backgroundColor:'transparent',
-         borderWidth:1.5,pointRadius:3,tension:0.4,borderDash:[4,3]},
-        {label:`${d.nom} 2023`,data:pct23,
-         borderColor:'#7f8c8d',backgroundColor:'transparent',
-         borderWidth:1.5,pointRadius:3,tension:0.4,borderDash:[3,4]},
-        {label:'Massif moyen',data:pctMassif,
-         borderColor:col,backgroundColor:'transparent',
-         borderWidth:2,pointRadius:3,tension:0.4,borderDash:[8,4]},
-        {label:'Seuil 50%',data:Array(10).fill(50),
-         borderColor:'#e67e22',backgroundColor:'transparent',
-         borderWidth:1,pointRadius:0,borderDash:[5,4]}
+        { label:`2025 (${p7Rate2025(d, annKey, attrKey)}%)`, data:pct25, borderColor:'#e74c3c', backgroundColor:'rgba(231,76,60,0.10)', fill:false, borderWidth:2.8, pointRadius:3.5, pointBackgroundColor:'#e74c3c', tension:0.24 },
+        { label:'2024', data:pct24, borderColor:'#f39c12', backgroundColor:'transparent', borderWidth:1.8, pointRadius:2.5, borderDash:[5,4], tension:0.22 },
+        { label:'2023', data:pct23, borderColor:'#7f8c8d', backgroundColor:'transparent', borderWidth:1.8, pointRadius:2.5, borderDash:[3,4], tension:0.22 },
+        { label:'Massif moyen', data:pctMassif, borderColor:col, backgroundColor:'transparent', borderWidth:2.2, pointRadius:0, borderDash:[7,4], tension:0.22 },
+        { label:'Seuil 50%', data:Array(10).fill(50), borderColor:'#e67e22', backgroundColor:'transparent', borderWidth:1.2, pointRadius:0, borderDash:[5,4] }
       ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{legend:{position:'top',labels:{font:{size:9},padding:5}}},
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12, usePointStyle:true, font:{size:10} } } },
       scales:{
-        y:{min:0,max:Math.max(120,Math.ceil(Math.max(...pctMassif)/10)*10+20),
-           grid:{color:'#e8ece8'},ticks:{callback:v=>v+'%'}},
-        x:{grid:{color:'#f0f4f0'}}
+        y:{ min:0, max:yMax, grid:{color:'#e8ece8'}, ticks:{ callback:v => v + '%' } },
+        x:{ grid:{color:'#f3f6f3'}, ticks:{ maxRotation:0, autoSkip:false } }
       }
     }
   });
@@ -1956,55 +1924,32 @@ function updateP7Focus(){
 
 function buildSynthTable(underDet, propMois, attrKey, annKey){
   const MOIS_S2 = ['Jun','Jul','Aoû','Sep','Oct','Nov','Déc','Jan','Fév','Mar'];
-  // Head
-  let hRow = `<tr style="background:var(--forest);color:#fff">
-    <th style="padding:7px 10px;text-align:left;min-width:130px">Détenteur</th>
-    <th style="padding:7px 8px;text-align:center">Attr.An</th>`;
-  MOIS_S2.forEach(m=>{ hRow+=`<th style="padding:7px 7px;text-align:center">${m}</th>`; });
-  hRow+=`<th style="padding:7px 8px;text-align:center">Total 2025</th>
-    <th style="padding:7px 8px;text-align:center">Taux 2025</th>
-    <th style="padding:7px 8px;text-align:center">Taux triennal</th>
-    <th style="padding:7px 8px;text-align:center">Tendance</th></tr>`;
+  let hRow = `<tr style="background:var(--forest);color:#fff"><th style="padding:7px 10px;text-align:left;min-width:160px">Détenteur</th><th style="padding:7px 8px;text-align:center">Attr.An</th>`;
+  MOIS_S2.forEach(m => { hRow += `<th style="padding:7px 7px;text-align:center">${m}</th>`; });
+  hRow += `<th style="padding:7px 8px;text-align:center">2025</th><th style="padding:7px 8px;text-align:center">Taux 2025</th><th style="padding:7px 8px;text-align:center">Taux tri.</th><th style="padding:7px 8px;text-align:center">Tendance</th></tr>`;
   document.getElementById('p7SynthHead').innerHTML = hRow;
 
-  let bRows = '';
-  underDet.forEach(d=>{
-    const p25=d[annKey][2]; const attrAn=+(d[attrKey]/3).toFixed(1);
-    const est25=propMois.map(p=>p*p25);
-    const cu25=cumulP7(est25);
-    const pct25m=cu25.map(v=>+(v/attrAn*100).toFixed(0));
-    const rate25=attrAn>0?+(p25/attrAn*100).toFixed(1):0;
-    const totalTri=d[annKey][0]+d[annKey][1]+d[annKey][2];
-    const rateTri=d[attrKey]>0?+(totalTri/d[attrKey]*100).toFixed(1):0;
+  function pctBadge(v){ const bg = p7Color(v); return `<span style="background:${bg};color:#fff;padding:1px 5px;border-radius:4px;font-size:0.68rem">${v}%</span>`; }
+  let rows = '';
+  underDet.forEach(d => {
+    const s25 = p7SeriesFor(d, propMois, annKey, attrKey);
+    const pct25m = s25.pct.map(v => +v.toFixed(0));
+    const attrAn = p7AnnualAttr(d, attrKey);
+    const rate25 = p7Rate2025(d, annKey, attrKey);
+    const rateTri = p7RateTri(d, annKey, attrKey);
+    const r23 = attrAn > 0 ? +(d[annKey][0] / attrAn * 100).toFixed(1) : 0;
+    const r24 = attrAn > 0 ? +(d[annKey][1] / attrAn * 100).toFixed(1) : 0;
+    let trend = '➡️';
+    if(rate25 > r24 + 5 && rate25 > r23) trend = '📈';
+    else if(rate25 < r24 - 5 && rate25 < r23) trend = '📉';
+    else if(rate25 > r24) trend = '↗️';
+    else if(rate25 < r24) trend = '↘️';
 
-    // Tendance : comparer 2025 vs 2023 rates
-    const r23=attrAn>0?+(d[annKey][0]/attrAn*100).toFixed(1):0;
-    const r24=attrAn>0?+(d[annKey][1]/attrAn*100).toFixed(1):0;
-    let trend='➡️';
-    if(rate25>r24+5&&rate25>r23) trend='📈';
-    else if(rate25<r24-5&&rate25<r23) trend='📉';
-    else if(rate25>r24) trend='↗️';
-    else if(rate25<r24) trend='↘️';
-
-    function pctBadge(v){
-      if(v<=0) return `<span style="background:#c0392b;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
-      if(v<30) return `<span style="background:#e74c3c;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
-      if(v<50) return `<span style="background:#e67e22;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
-      if(v<80) return `<span style="background:#f39c12;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
-      return `<span style="background:#27ae60;color:#fff;padding:1px 5px;border-radius:3px">${v}%</span>`;
-    }
-
-    bRows += `<tr style="border-bottom:1px solid var(--border)">
-      <td style="padding:5px 10px;font-weight:600;font-size:0.73rem">${d.nom}</td>
-      <td style="padding:5px 8px;text-align:center">${attrAn.toFixed(0)}</td>`;
-    pct25m.forEach(v=>{ bRows+=`<td style="padding:5px 6px;text-align:center">${pctBadge(v)}</td>`; });
-    bRows+=`<td style="padding:5px 8px;text-align:center;font-weight:700">${p25}</td>
-      <td style="padding:5px 8px;text-align:center">${pctBadge(rate25)}</td>
-      <td style="padding:5px 8px;text-align:center">${pctBadge(rateTri)}</td>
-      <td style="padding:5px 8px;text-align:center;font-size:1rem">${trend}</td>
-    </tr>`;
+    rows += `<tr style="border-bottom:1px solid var(--border)"><td style="padding:6px 10px;font-weight:600;background:#fff">${d.nom}</td><td style="padding:6px 8px;text-align:center">${attrAn.toFixed(1)}</td>`;
+    pct25m.forEach(v => { rows += `<td style="padding:6px 6px;text-align:center">${pctBadge(v)}</td>`; });
+    rows += `<td style="padding:6px 8px;text-align:center;font-weight:700">${d[annKey][2]}</td><td style="padding:6px 8px;text-align:center">${pctBadge(+rate25.toFixed(0))}</td><td style="padding:6px 8px;text-align:center">${pctBadge(+rateTri.toFixed(0))}</td><td style="padding:6px 8px;text-align:center;font-size:1rem">${trend}</td></tr>`;
   });
-  document.getElementById('p7SynthBody').innerHTML = bRows;
+  document.getElementById('p7SynthBody').innerHTML = rows;
 }
 
 function switchP7(species){
